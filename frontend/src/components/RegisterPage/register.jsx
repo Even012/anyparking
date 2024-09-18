@@ -15,12 +15,11 @@ import { useNavigate } from "react-router-dom";
 import login_img from "../../assets/login2.png";
 import axios from "axios";
 
-function Register(props) {
+function Register({user, setUser}) {
   const navigate = useNavigate();
 
-  const userEmail = props.userEmail;
   const [name, setName] = React.useState("");
-  const [email, setEmail] = React.useState(userEmail || "");
+  const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [passwordConfirmed, setPasswordConfirmed] = React.useState("");
   const [phoneNumber, setPhoneNumber] = React.useState("");
@@ -30,7 +29,7 @@ function Register(props) {
     e.preventDefault();
     if (password === passwordConfirmed) {
       try {
-        const res = await axios.post("http://localhost:8888/register/", {
+        const res = await axios.post("http://localhost:8888/user/auth/register/", {
             name: name,
             email: email,
             password: password,
@@ -38,10 +37,10 @@ function Register(props) {
             phoneNumber: phoneNumber,
             role: role
         });
-        console.log(res.data.message);
-        if (res.data.message === 'User registered successfully!') {
+        console.log(res);
+        if (res.status === 200) {
             navigate('/');
-            alert('User registered successfully!');
+            setUser(email);
         } else {
             alert(res.data.message);
         }

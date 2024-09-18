@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import login_img from "../../assets/login2.png";
 
-function Login() {
+function Login({setUser, setToken}) {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -21,15 +21,14 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const loginresponse = await axios.post("http://localhost:8888/login/", {
+      const loginresponse = await axios.post("http://localhost:8888/user/auth/login/", {
         email: email,
         password: password,
       });
-      const logindata = loginresponse.data;
-      if (logindata === "Login successfully!") {
-        // store the email in local storage
-        localStorage.setItem("UserEmail", email);
-
+      console.log(loginresponse.data.token);
+      if (loginresponse.status === 200) {
+        setUser(email);
+        setToken(loginresponse.data.token);
         setMessage(
           <Typography color="success.main">
             Welcome, you are logged in successfully!

@@ -1,3 +1,8 @@
+/* src/index.css */
+body {
+  font-family: 'Quicksand', sans-serif;
+}
+
 .App {
   text-align: center;
 }

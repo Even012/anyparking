@@ -17,15 +17,9 @@ const VisitorLandingPage = () => {
         </Typography>
         
         {/* Call to Action Buttons */}
-        <Box className="mt-8 space-y-4">
-          <Button href="/browse" variant="contained" className="customGreen py-3 px-6 rounded-lg">
+        <Box className="mt-8">
+          <Button href="/browse" variant="contained" sx={{mx: 2}}>
             Explore Available Parking
-          </Button>
-          <Button href="/register-provider" variant="outlined" color="primary" className="py-3 px-6 rounded-lg">
-            Sign Up as Provider
-          </Button>
-          <Button href="/register-consumer" variant="outlined" color="primary" className="py-3 px-6 rounded-lg">
-            Sign Up as Consumer
           </Button>
         </Box>
         
@@ -39,8 +33,6 @@ const VisitorLandingPage = () => {
           </Typography>
         </Box>
       </Container>
-
-
     </>
   );
 };
