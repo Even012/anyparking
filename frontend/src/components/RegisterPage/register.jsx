@@ -18,11 +18,9 @@ import axios from "axios";
 function Register({user, setUser}) {
   const navigate = useNavigate();
 
-  const [name, setName] = React.useState("");
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
   const [passwordConfirmed, setPasswordConfirmed] = React.useState("");
-  const [phoneNumber, setPhoneNumber] = React.useState("");
   const [role, setRole] = React.useState("consumer");
 
   const handleSubmit = async (e) => {
@@ -30,11 +28,9 @@ function Register({user, setUser}) {
     if (password === passwordConfirmed) {
       try {
         const res = await axios.post("http://localhost:8888/user/auth/register/", {
-            name: name,
             email: email,
             password: password,
             passwordConfirmed: passwordConfirmed,
-            phoneNumber: phoneNumber,
             role: role
         });
         console.log(res);
@@ -53,11 +49,11 @@ function Register({user, setUser}) {
   };
 
   return (
-    <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", mt: 4}}>
-      <Paper elevation={3} sx={{ maxWidth: 1000, p: 2, borderRadius: 2 }}>
+    <Box sx={{ flexGrow: 1, display: "flex", justifyContent: "center", alignItems: "center"}}>
+      <Paper elevation={3} sx={{ maxWidth: 1000, p: 2, m: 2, borderRadius: 6 }}>
         <Grid container spacing={2} alignItems="center">
           {/* Left section with image */}
-          <Grid item xs={12} md={6}>
+          <Grid  xs={12} md={6}>
             <Box sx={{ textAlign: "center", mb: 2 }}>
               <Typography variant="h4" fontWeight="bold">
                 AnyParking
@@ -70,22 +66,29 @@ function Register({user, setUser}) {
               component="img"
               src={login_img}
               alt="Register Visual"
-              sx={{ width: "100%", borderRadius: 2 }}
+              sx={{ width: "100%", borderRadius: 2, p: 2}}
             />
           </Grid>
 
           {/* Right section with registration form */}
-          <Grid item xs={12} md={6}>
+          <Grid  xs={12} md={6}>
             <Box
               component="form"
               onSubmit={handleSubmit}
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                gap: {xs: 0, md: 1},
+                justifyContent: "center",
+                padding: 2
+              }}
             >
-              <Typography variant="h5" fontWeight="bold" sx={{ mb: 2, mt: 2 }}>
+              <Typography variant="h5" fontWeight="bold">
                 Sign Up
               </Typography>
 
               {/* Role Selection */}
-              <FormControl component="fieldset" sx={{ mb: 3 }}>
+              <FormControl component="fieldset" >
                 <Typography variant="body1">
                   Register As a...
                 </Typography>
@@ -107,28 +110,6 @@ function Register({user, setUser}) {
                   />
                 </RadioGroup>
               </FormControl>
-
-              {/* Name Field */}
-              <TextField
-                label="Name"
-                variant="outlined"
-                fullWidth
-                required
-                margin="normal"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              />
-
-              {/* Phone Number Field */}
-              <TextField
-                label="Phone Number"
-                variant="outlined"
-                fullWidth
-                required
-                margin="normal"
-                value={phoneNumber}
-                onChange={(e) => setPhoneNumber(e.target.value)}
-              />
 
               {/* Email Field */}
               <TextField

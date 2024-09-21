@@ -4,7 +4,7 @@ import { Box, Container, Grid, Typography } from '@mui/material'
 export default function Footer() {
   return (
     <Box component="footer" className="bg-gray-100 py-3">
-        <Container>
+        <Container maxWidth={false}>
         <Grid container spacing={4}>
             <Grid item xs={12} sm={6}>
             <Typography variant="body1" className="text-gray-700">

@@ -50,8 +50,8 @@ function Login({setUser, setToken}) {
   };
 
   return (
-    <Container maxWidth="md" sx={{mt: 16}}>
-      <Paper elevation={3} sx={{ p: 4, mt: 5 }}>
+    <Container maxWidth="md" sx={{flexGrow: 1, display: 'flex', alignItems: 'center'}}>
+      <Paper elevation={3} sx={{ p: 2, m: 2, borderRadius: 6 }}>
         <Grid container spacing={2}>
           {/* Left section with image */}
           <Grid item xs={12} md={6}>
@@ -79,7 +79,7 @@ function Login({setUser, setToken}) {
               sx={{
                 display: "flex",
                 flexDirection: "column",
-                gap: 3,
+                gap: {xs: 1, md: 3},
                 justifyContent: "center",
               }}
             >

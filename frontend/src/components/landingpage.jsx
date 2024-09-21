@@ -8,7 +8,7 @@ const VisitorLandingPage = () => {
   return (
     <>
       {/* Main Content */}
-      <Container className="text-center mt-10">
+      <Container className="text-center mt-10" sx={{flexGrow: 1}}>
         <Typography variant="h3" className="font-bold text-gray-900">
           Welcome to AnyParking
         </Typography>

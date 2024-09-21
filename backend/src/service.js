@@ -85,10 +85,10 @@ export const login = (email, password) =>
   
 
 export const register = async (props) => {
-  const { name, email, password, passwordConfirmed, phoneNumber, role } = props;
+  const { email, password, passwordConfirmed, role } = props;
 
   return resourceLock('resourceLock', async (resolve, reject) => {
-    if (!name || !email || !password || !passwordConfirmed || !phoneNumber || !role) {
+    if (!email || !password || !passwordConfirmed || !role) {
       return reject(new Error('All fields are required'));
     } else if (password !== passwordConfirmed) {
       return reject(new Error('Passwords do not match'));
@@ -101,10 +101,8 @@ export const register = async (props) => {
       }
       const hashedPassword = await bcrypt.hash(password, 10);
       const newUser = new User({
-        name,
         email,
         password: hashedPassword,
-        phoneNumber,
         role,
         sessionActive: true
       });

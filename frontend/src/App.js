@@ -8,6 +8,9 @@ import Login from './components/LoginPage/login';
 import Register from './components/RegisterPage/register';
 import VisitorLandingPage from './components/landingpage';
 import VisitorDashboard from './components/Dashboard/VisitorDashboard'
+
+import Map from './components/Map/Map';
+
 import ConsumerDashboard from './components/Dashboard/ConsumerDashboard';
 import Footer from './components/footer';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -35,25 +38,22 @@ function App() {
   return (
     <ThemeProvider theme={theme}> 
     <Router>
-    <Box className='flex flex-col min-h-screen'>
+    <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'column'}}>
       
       <NavBar token={token} user={user} setUser={setUser}/>
 
-      <Box
-        component="main"
-        sx={{
-          flexGrow: 1, // This makes the main content expand to fill the remaining space
-        }}
-      >
-        <Routes>
-          <Route path="/" element={<VisitorLandingPage />} />
-          <Route path="/login" element={<Login setUser={setUser} setToken={setToken}/>} />
-          <Route path="/register" element={<Register setUser={setUser} setToken={setToken}/>} />
-          <Route path="/browse" element={<VisitorDashboard />} />
 
-          <Route path="/consumer/dashboard" element={<ConsumerDashboard />} />
-        </Routes>
-      </Box>
+      <Routes>
+        <Route path="/" element={<VisitorLandingPage />} />
+        <Route path="/login" element={<Login setUser={setUser} setToken={setToken}/>} />
+        <Route path="/register" element={<Register setUser={setUser} setToken={setToken}/>} />
+        <Route path="/browse" element={<VisitorDashboard />} />
+        <Route path="/map" element={<Map />} />
+
+
+        <Route path="/consumer/dashboard" element={<ConsumerDashboard />} />
+      </Routes>
+
       
       <Footer />
     </Box>
