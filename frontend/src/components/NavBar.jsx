@@ -15,9 +15,14 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 
-function NavBar({user, token, setUser}) {
-  const pages = user ? ['Home'] : ['Home', 'Login']; 
-  const settings = user ? ['Profile', 'Logout'] : []; // visitor - no setting option
+function NavBar() {
+
+  const token = localStorage.getItem("token");
+  const user = localStorage.getItem("user");
+  const role = localStorage.getItem("role");
+  const pages = !token ? ['Home', 'Login'] : (role === "provider" ? ['Home', 'My Listings'] : ['Home', 'Explore Parking']); 
+
+  const settings = token ? ['Profile', 'Logout'] : []; // visitor - no setting option
   
   
   const navigate = useNavigate();
@@ -47,7 +52,9 @@ function NavBar({user, token, setUser}) {
       navigate('/login');
     } else if (page === 'Explore Parking') {
       console.log(page);
-    } 
+    } else {
+      navigate('/provider/dashboard');
+    }
   }
   const handleClickSetting = async (page) => {
     handleCloseUserMenu();
@@ -58,13 +65,14 @@ function NavBar({user, token, setUser}) {
         const res = await axios.post("http://localhost:8888/user/auth/logout/", {}, 
           { headers: {Authorization: `Bearer ${token}` } }
         );
-        if(res.data.status === 200) {
+        if(res.status === 200) {
           navigate('/login');
-          setUser(null);
+          localStorage.removeItem("token");
+          localStorage.removeItem("user");
+          localStorage.removeItem("role");
         } 
       } catch(error) {
-        console.log(error);
-        alert(error.messge);
+        console.log(error.response.data.error);
       }
     } 
   }

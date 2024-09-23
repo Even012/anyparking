@@ -10,12 +10,13 @@ import {
   FormControlLabel,
   RadioGroup,
   Paper,
+  Container,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import login_img from "../../assets/login2.png";
 import axios from "axios";
 
-function Register({user, setUser}) {
+function Register() {
   const navigate = useNavigate();
 
   const [email, setEmail] = React.useState("");
@@ -35,8 +36,14 @@ function Register({user, setUser}) {
         });
         console.log(res);
         if (res.status === 200) {
-            navigate('/');
-            setUser(email);
+            localStorage.setItem("token", res.data.token);
+            localStorage.setItem("user", email);
+            localStorage.setItem("role", role);
+            if(role === 'consumer') {
+              navigate("/consumer/dashboard");
+            } else {
+              navigate("/provider/dashboard");
+            }
         } else {
             alert(res.data.message);
         }
@@ -49,11 +56,11 @@ function Register({user, setUser}) {
   };
 
   return (
-    <Box sx={{ flexGrow: 1, display: "flex", justifyContent: "center", alignItems: "center"}}>
-      <Paper elevation={3} sx={{ maxWidth: 1000, p: 2, m: 2, borderRadius: 6 }}>
-        <Grid container spacing={2} alignItems="center">
+    <Container maxWidth="md" sx={{flexGrow: 1, display: 'flex', alignItems: 'center'}}>
+      <Paper elevation={3} sx={{ p: 2, m: 2, borderRadius: 6 }}>
+        <Grid container spacing={2}>
           {/* Left section with image */}
-          <Grid  xs={12} md={6}>
+          <Grid item xs={12} md={6}>
             <Box sx={{ textAlign: "center", mb: 2 }}>
               <Typography variant="h4" fontWeight="bold">
                 AnyParking
@@ -71,7 +78,7 @@ function Register({user, setUser}) {
           </Grid>
 
           {/* Right section with registration form */}
-          <Grid  xs={12} md={6}>
+          <Grid item xs={12} md={6}>
             <Box
               component="form"
               onSubmit={handleSubmit}
@@ -89,9 +96,6 @@ function Register({user, setUser}) {
 
               {/* Role Selection */}
               <FormControl component="fieldset" >
-                <Typography variant="body1">
-                  Register As a...
-                </Typography>
                 <RadioGroup
                   row
                   name="role"
@@ -172,7 +176,7 @@ function Register({user, setUser}) {
           </Grid>
         </Grid>
       </Paper>
-    </Box>
+    </Container>
   );
 }
 

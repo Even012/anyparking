@@ -1,14 +1,10 @@
-import mongoose from 'mongoose';
+import { User, Listing } from './models.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import AsyncLock from 'async-lock';
 
 const lock = new AsyncLock();
 const JWT_SECRET = 'giraffegiraffebeetroot';
-// Connect to MongoDB
-mongoose.connect('mongodb://localhost:27017/userDB')
-  .then(() => console.log('Connected to MongoDB'))
-  .catch(err => console.error('Could not connect to MongoDB', err));
 
 
 /***************************************************************
@@ -26,23 +22,7 @@ export const resourceLock = (key, callback) =>
     });
   });
 
-/***************************************************************
-                      User Schema
-***************************************************************/
-const userSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
-  phoneNumber: { type: String, required: true },
-  role: {
-    type: String,
-    enum: ['consumer', 'provider', 'admin'],
-    default: 'consumer'
-  },
-  sessionActive: { type: Boolean, default: false }
-});
-// User Model
-const User = mongoose.model('User', userSchema);
+
 
 /***************************************************************
                        Auth Functions
@@ -53,7 +33,7 @@ export const getEmailFromAuthorization = async (authorization) => {
     const token = authorization.replace('Bearer ', '');
     const { email } = jwt.verify(token, JWT_SECRET);
     const user = await User.findOne({ email });
-    if (!user) {
+    if (!user || user.sessionActive === false) {
       throw new Error('Invalid Token');
     }
     return email;
@@ -62,7 +42,7 @@ export const getEmailFromAuthorization = async (authorization) => {
   }
 };
   
-export const login = (email, password) => 
+export const login = (email, password, role) => 
   resourceLock('resourceLock', async (resolve, reject) => {
     try {
       const user = await User.findOne({ email });
@@ -70,7 +50,9 @@ export const login = (email, password) =>
         return reject(new Error('User not found! Please provide a valid email!'));
       }
       const isPasswordValid = await bcrypt.compare(password, user.password);
-      if (isPasswordValid) {
+      if (user.role !== role) {
+        return reject(new Error('Invalid role!'));
+      } else if (isPasswordValid) {
         user.sessionActive = true;
         await user.save();
         const token = jwt.sign({ email }, JWT_SECRET, { algorithm: 'HS256' });
@@ -116,19 +98,54 @@ export const register = async (props) => {
 }
 
 export const logout = async (email) => {
-  try {
-    const user = await User.findOne({ email });
-    if (!user) {
-      return { status: 404, message: 'User not found' };
-    }
-    if (user.sessionActive == false) {
-      return { status: 400, message: 'Please Login first!' };
-    }
-    user.sessionActive = false;
-    await user.save(); // Save the updated user status
+  return resourceLock('resourceLock', async (resolve, reject) => {
+    try {
+      const user = await User.findOne({ email });
 
-    return { status: 200, message: 'Logged out successfully' };
-  } catch (error) {
-    return { status: 500, message: 'Server error' };
-  }
+      user.sessionActive = false;
+      await user.save(); // Save the updated user status
+  
+      return resolve({message: 'Logged out successfully'});
+    } catch (error) {
+      return reject(new Error('Server error' ));
+    }
+  })
+};
+
+/***************************************************************
+                       Listing Functions
+***************************************************************/
+export const createListing = async ({ title, address, price, thumbnail, metadata }) => {
+  
+  return resourceLock('resourceLock', async (resolve, reject) => {
+    try {  
+      // Create a new listing
+      const newListing = new Listing({
+        title,
+        address,
+        price, 
+        thumbnail,
+        metadata
+      });
+      // Save the listing
+      await newListing.save();
+      return resolve({message: 'Listing created!'});
+    } catch (error) {
+      return reject(new Error('Server error' ));
+    }
+  })
+};
+
+export const getAllListings = async () => {
+  
+  return resourceLock('resourceLock', async (resolve, reject) => {
+    try {  
+      const listings = await Listing.find();
+      console.log(listings);
+      return resolve(listings);
+    } catch (error) {
+      console.log(error);
+      return reject(new Error('Server error' ));
+    }
+  })
 };

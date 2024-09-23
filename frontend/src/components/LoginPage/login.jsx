@@ -7,16 +7,21 @@ import {
   TextField,
   Box,
   Grid,
+  FormControl,
+  FormControlLabel,
+  Radio,
+  RadioGroup,
   Paper,
   Container,
 } from "@mui/material";
 import login_img from "../../assets/login2.png";
 
-function Login({setUser, setToken}) {
+function Login() {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
+  const [role, setRole] = React.useState("consumer");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,18 +29,25 @@ function Login({setUser, setToken}) {
       const loginresponse = await axios.post("http://localhost:8888/user/auth/login/", {
         email: email,
         password: password,
+        role: role
       });
       console.log(loginresponse.data.token);
       if (loginresponse.status === 200) {
-        setUser(email);
-        setToken(loginresponse.data.token);
+        
+        localStorage.setItem("token", loginresponse.data.token);
+        localStorage.setItem("user", email);
+        localStorage.setItem("role", role);
         setMessage(
           <Typography color="success.main">
             Welcome, you are logged in successfully!
           </Typography>
         );
         setTimeout(() => {
-          navigate("/");
+          if(role === 'consumer') {
+            navigate("/consumer/dashboard");
+          } else {
+            navigate("/provider/dashboard");
+          }
         }, 2000); // After logged in successfully, user will be redirected to dashboard
       } else {
         setMessage(
@@ -44,7 +56,7 @@ function Login({setUser, setToken}) {
       }
     } catch (error) {
       setMessage(
-        <Typography color="error.main">Invalid Credentials</Typography>
+        <Typography color="error.main">{error.response.data.error}</Typography>
       );
     }
   };
@@ -86,6 +98,25 @@ function Login({setUser, setToken}) {
               <Typography variant="h5" fontWeight="bold" sx={{ mb: 4, mt: 2 }}>
                 Welcome to AnyParking!
               </Typography>
+              <FormControl component="fieldset" >
+                <RadioGroup
+                  row
+                  name="role"
+                  value={role}
+                  onChange={(e) => setRole(e.target.value)}
+                >
+                  <FormControlLabel
+                    value="consumer"
+                    control={<Radio />}
+                    label="consumer"
+                  />
+                  <FormControlLabel
+                    value="provider"
+                    control={<Radio />}
+                    label="provider"
+                  />
+                </RadioGroup>
+              </FormControl>
               <TextField
                 label="Email"
                 type="email"
@@ -111,7 +142,7 @@ function Login({setUser, setToken}) {
               >
                 Login
               </Button>
-              {message && <Box mt={2} sx={{ textAlign: 'center' }}>{message}</Box>}
+              {message && <Box  sx={{ textAlign: 'center' }}>{message}</Box>}
 
               {/* Links */}
               <Box

@@ -1,11 +1,14 @@
 import React from "react";
-import { Box, Grid, Typography } from "@mui/material";
-import login_img from "../../assets/login2.png";
+import { Box, Stack, Typography } from "@mui/material";
 import MapComponent from "../Map/Map";
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import axios from "axios";
+
 
 function VisitorDashboard() {
+
+    const [listings, setListings] = React.useState(null);   
     const theme = useTheme();
     const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -14,67 +17,73 @@ function VisitorDashboard() {
     const leftBoxWidth = isSmallScreen ? '100%' : '33%';
     const rightBoxWidth = isSmallScreen ? '100%' : '67%';
 
+    const token = localStorage.getItem("token");
+    const [flyToCoordinates, setFlyToCoordinates] = React.useState(null); // Store the coordinates for flying to a location
+
+
+    React.useEffect(() => {
+        const fetchListings = async () => {
+          try {
+            const res = await axios.get("http://localhost:8888/listings/all", { 
+              headers: { Authorization: `Bearer ${token}` }
+            });
+    
+            if (res.status === 200) {
+              setListings(res.data);  // Store the listings in the state, should filter out my listing in real case ***
+            }
+          } catch (error) {
+            if (error.response) {
+              console.log(error.response.data.error);  // Set error message if server responds with an error
+            } else {
+              console.log('An error occurred while fetching the listings.');
+            }
+          }
+        };
+    
+        fetchListings();
+      }, [token]); 
+
+    const listingBox = (listing) => (
+      <Box sx={{display: "flex", flexDirection: "row", justifyContent: "flex-left", backgroundColor: '#F9FCF4', m: 1, p: 1, borderRadius: 2}}>
+        <Box
+          component="img"
+          sx={{
+              width: '80px',  // Set the fixed width
+              height: '80px', // Set the fixed height
+              objectFit: 'cover', // Ensure the image covers the box without distortion
+              borderRadius: '8px', // Optional: add rounded corners
+              mr: 1,
+              flexShrink: 0,
+          }}
+          alt="car image"
+          src={listing.thumbnail} // Image source
+        />
+        <Box sx={{display: "flex", flexDirection: "column", justifyContent: "space-between"}}>
+            <Typography sx={{fontSize: 15, fontWeight: 'bold'}}>{listing.title }</Typography>
+            <Typography sx={{fontSize: 12}}>{listing.address }</Typography>
+            <Typography>
+                $<Box component="span" sx={{ fontWeight: 'bold' }}>{listing.price}</Box>/h
+            </Typography>
+        </Box>
+      </Box>
+    )
+
   return (
     <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: flexDirection}}>
       {/* LEFT PART (LISTINGS QUERY RESULT) */}
       <Box sx={{ width: leftBoxWidth, height: isSmallScreen ? '50vh' : 'auto', padding: '16px', backgroundColor: '#F0F6E8', overflowY: 'auto' }}>
         
-        <Grid container spacing={2} sx={{display: 'flex', justifyContent: 'space-evenly'}}>
-            <Grid item xs={12} md={6} sx={{backgroundColor: '#F9FCF4', padding: 1, borderRadius: '8px', m: 1}}>
-                <Box sx={{display: "flex", flexDirection: "row", justifyContent: "space-between", maxWidth: '250px'}}>
-                    <Box
-                      component="img"
-                      sx={{
-                          width: '80px',  // Set the fixed width
-                          height: '80px', // Set the fixed height
-                          objectFit: 'cover', // Ensure the image covers the box without distortion
-                          borderRadius: '8px', // Optional: add rounded corners
-                          mr: 1,
-                      }}
-                      alt="car image"
-                      src={login_img} // Image source
-                    />
-                    <Box sx={{display: "flex", flexDirection: "column", justifyContent: "space-between"}}>
-                        <Typography>KentSt, Sydney, NSW 2000</Typography>
-                        <Typography>
-                            $<Box component="span" sx={{ fontWeight: 'bold' }}>6</Box>/h
-                        </Typography>
-                    </Box>
+        <Stack spacing={2} sx={{display: 'flex', justifyContent: 'space-around'}}>
+            <Stack>
+              {listings && listings.map((listing) => (<Box key={listing._id} onClick={() => setFlyToCoordinates(listing.metadata.coordinates)}>{listingBox(listing)}</Box>))}
+            </Stack>
 
-                    
-                </Box>
-            </Grid>
-            <Grid item xs={12} md={6} sx={{backgroundColor: '#F9FCF4', padding: 1, borderRadius: '8px', m: 1,}}>
-                <Box sx={{display: "flex", flexDirection: "row", justifyContent: "space-between", maxWidth: '250px'}}>
-                    <Box
-                      component="img"
-                      sx={{
-                          width: '80px',  // Set the fixed width
-                          height: '80px', // Set the fixed height
-                          objectFit: 'cover', // Ensure the image covers the box without distortion
-                          borderRadius: '8px', // Optional: add rounded corners
-                          mr: 1,
-                      }}
-                      alt="car image"
-                      src={login_img} // Image source
-                    />
-                    <Box sx={{display: "flex", flexDirection: "column", justifyContent: "space-between"}}>
-                        <Typography>KentSt, Sydney, NSW 2000</Typography>
-                        <Typography>
-                            $<Box component="span" sx={{ fontWeight: 'bold' }}>6</Box>/h
-                        </Typography>
-                    </Box>
-
-                    
-                </Box>
-            </Grid>
-
-        </Grid>
+        </Stack>
       </Box>
 
       {/* RIGHT PART (MAP) */}
       <Box sx={{ width: rightBoxWidth, height: isSmallScreen ? '50vh' : 'auto', }}>
-        <MapComponent/>
+        <MapComponent listings={listings} flyToCoordinates={flyToCoordinates}/>
       </Box>
 
     </Box>

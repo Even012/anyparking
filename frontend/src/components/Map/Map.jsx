@@ -2,8 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import maplibregl from 'maplibre-gl'; // Import MapLibre GL JS
 import 'maplibre-gl/dist/maplibre-gl.css'; // Import MapLibre GL CSS
 
-
-const MapComponent = () => {
+const MapComponent = ({listings, flyToCoordinates}) => {
   const mapContainerRef = useRef(null); // Reference for the map container
   const mapInstanceRef = useRef(null);  // Reference to store the map instance
   const locationIqAccessToken = 'pk.dadad7861429156330de883f13d575ee';
@@ -42,7 +41,7 @@ const MapComponent = () => {
         container: mapContainerRef.current, // Reference to the map container
         style: `https://tiles.locationiq.com/v3/streets/vector.json?key=${locationIqAccessToken}`,
         center: [coordinates.longitude, coordinates.latitude], // Initial center [longitude, latitude]
-        zoom: 14, // Initial zoom level
+        zoom: 16, // Initial zoom level
       });
   
       // Store the map instance for future reference
@@ -86,12 +85,43 @@ const MapComponent = () => {
           });
         }
       });
+
+      // place mark on map
+      const placeMarkersOnMap = async () => {
+        if (map && listings) {
+          listings.forEach(async (listing) => {
+            const coordinates = listing.metadata.coordinates;
+    
+            if (coordinates) {
+              // Create a marker at the listing's location
+              new maplibregl.Marker()
+                .setLngLat([coordinates[0], coordinates[1]]) // [longitude, latitude]
+                .setPopup(
+                  new maplibregl.Popup({ offset: 25 }).setHTML(
+                    `<h3>${listing.title}</h3><p>${"$"} ${listing.price} ${"/h"}</p>`
+                  )
+                ) // Add a popup
+                .addTo(map); // Add marker to the map
+            }
+          });
+        }
+      };
+    
+      placeMarkersOnMap();
+
+      // fly to location
+      map.flyTo({
+        center: flyToCoordinates, // [longitude, latitude]
+        zoom: 16, // Zoom level for the flyTo animation
+        speed: 1, // Animation speed
+        essential: true, // This ensures the animation will not be interrupted by user interaction
+      });
   
       // Cleanup on unmount
       return () => map.remove();
 
     }
-  }, [coordinates]);
+  }, [coordinates, listings, flyToCoordinates]);
 
   // map resize
   useEffect(() => {
@@ -105,7 +135,7 @@ const MapComponent = () => {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
-  
+
   return (
     <div ref={mapContainerRef} style={{ width: '100%', height: '100%' }} />
   );

@@ -1,5 +1,4 @@
 import './App.css';
-import { useState } from 'react';
 import { Box } from '@mui/material';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
@@ -9,9 +8,8 @@ import Register from './components/RegisterPage/register';
 import VisitorLandingPage from './components/landingpage';
 import VisitorDashboard from './components/Dashboard/VisitorDashboard'
 
-import Map from './components/Map/Map';
-
 import ConsumerDashboard from './components/Dashboard/ConsumerDashboard';
+import ProviderDashboard from './components/Dashboard/ProviderDashboard';
 import Footer from './components/footer';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
@@ -32,26 +30,23 @@ const theme = createTheme({
 });
 
 function App() {
-  const [user, setUser] = useState(null); // set Email when login/register
-  const [token, setToken] = useState(null); // set Email when login/register
+
   
   return (
     <ThemeProvider theme={theme}> 
     <Router>
     <Box sx={{ height: '100vh', display: 'flex', flexDirection: 'column'}}>
       
-      <NavBar token={token} user={user} setUser={setUser}/>
+      <NavBar/>
 
 
       <Routes>
         <Route path="/" element={<VisitorLandingPage />} />
-        <Route path="/login" element={<Login setUser={setUser} setToken={setToken}/>} />
-        <Route path="/register" element={<Register setUser={setUser} setToken={setToken}/>} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
         <Route path="/browse" element={<VisitorDashboard />} />
-        <Route path="/map" element={<Map />} />
-
-
         <Route path="/consumer/dashboard" element={<ConsumerDashboard />} />
+        <Route path="/provider/dashboard" element={<ProviderDashboard />} />
       </Routes>
 
       
