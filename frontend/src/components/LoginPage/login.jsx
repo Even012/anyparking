@@ -44,7 +44,7 @@ function Login() {
         );
         setTimeout(() => {
           if(role === 'consumer') {
-            navigate("/consumer/dashboard");
+            navigate("/consumer/browse");
           } else {
             navigate("/provider/dashboard");
           }

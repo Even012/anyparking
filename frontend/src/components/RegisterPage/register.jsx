@@ -40,7 +40,7 @@ function Register() {
             localStorage.setItem("user", email);
             localStorage.setItem("role", role);
             if(role === 'consumer') {
-              navigate("/consumer/dashboard");
+              navigate("/consumer/browse");
             } else {
               navigate("/provider/dashboard");
             }

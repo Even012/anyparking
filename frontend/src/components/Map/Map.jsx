@@ -41,7 +41,7 @@ const MapComponent = ({listings, flyToCoordinates}) => {
         container: mapContainerRef.current, // Reference to the map container
         style: `https://tiles.locationiq.com/v3/streets/vector.json?key=${locationIqAccessToken}`,
         center: [coordinates.longitude, coordinates.latitude], // Initial center [longitude, latitude]
-        zoom: 16, // Initial zoom level
+        zoom: 14, // Initial zoom level
       });
   
       // Store the map instance for future reference
@@ -112,7 +112,7 @@ const MapComponent = ({listings, flyToCoordinates}) => {
       // fly to location
       map.flyTo({
         center: flyToCoordinates, // [longitude, latitude]
-        zoom: 16, // Zoom level for the flyTo animation
+        zoom: 14, // Zoom level for the flyTo animation
         speed: 1, // Animation speed
         essential: true, // This ensures the animation will not be interrupted by user interaction
       });

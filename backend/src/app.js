@@ -4,7 +4,9 @@ import {
   register, 
   logout,
   createListing,
-  getAllListings
+  getAllListings,
+  createBooking,
+  getAllBookings
 } from './service.js';
 
 import express from 'express';
@@ -87,6 +89,31 @@ app.get('/listings/all', async (req, res) => {
     res.status(400).json({error: error.message});
   }
 });
+
+/***************************************************************
+                       Booking Functions
+***************************************************************/
+app.post('/bookings/new', authenticateToken, async (req, res) => {
+  try {
+    const result = await createBooking({body: req.body, email: req.email});
+    res.status(200).json(result);
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({error: error.message});
+  }
+});
+
+app.get('/bookings/all', authenticateToken, async (req, res) => {
+  try {
+    const result = await getAllBookings();
+    console.log(result);
+    res.status(200).json(result);
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({error: error.message});
+  }
+});
+
 
 // Start the Server
 app.listen(8888, () => {

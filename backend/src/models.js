@@ -25,7 +25,6 @@ const userSchema = new mongoose.Schema({
 export const User = mongoose.model('User', userSchema);
 
 
-
 /***************************************************************
                       Listing Schema
 ***************************************************************/
@@ -46,3 +45,17 @@ const listingSchema = new mongoose.Schema({
   
 // Listing Model
 export const Listing = mongoose.model('Listing', listingSchema);
+
+/***************************************************************
+                      Listing Schema
+***************************************************************/
+const bookingSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  email: { type: String, required: true},
+  date: { type: Date, required: true },
+  duration: { type: Number, required: true },
+  address: { type: String, required: true},
+});
+
+// Listing Model
+export const Booking = mongoose.model('Booking', bookingSchema);

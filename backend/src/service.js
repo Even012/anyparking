@@ -1,4 +1,4 @@
-import { User, Listing } from './models.js';
+import { User, Listing, Booking } from './models.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import AsyncLock from 'async-lock';
@@ -143,6 +143,46 @@ export const getAllListings = async () => {
       const listings = await Listing.find();
       console.log(listings);
       return resolve(listings);
+    } catch (error) {
+      console.log(error);
+      return reject(new Error('Server error' ));
+    }
+  })
+};
+
+/***************************************************************
+                       Booking Functions
+***************************************************************/
+export const createBooking = async ({body, email}) => {
+  const { name, date, duration, address } = body;
+  return resourceLock('resourceLock', async (resolve, reject) => {
+    try {  
+      // Create a new listing
+      const newBooking = new Booking({
+        name,
+        email,
+        date,
+        duration,
+        address
+      });
+      // Save the listing
+      await newBooking.save();
+      return resolve({message: 'Listing created!'});
+    } catch (error) {
+      console.log(error);
+      return reject(new Error('Server error' ));
+    }
+  })
+};
+
+
+export const getAllBookings = async () => {
+  
+  return resourceLock('resourceLock', async (resolve, reject) => {
+    try {  
+      const bookings = await Booking.find();
+      console.log(bookings);
+      return resolve(bookings);
     } catch (error) {
       console.log(error);
       return reject(new Error('Server error' ));

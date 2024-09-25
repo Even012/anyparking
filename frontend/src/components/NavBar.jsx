@@ -20,7 +20,7 @@ function NavBar() {
   const token = localStorage.getItem("token");
   const user = localStorage.getItem("user");
   const role = localStorage.getItem("role");
-  const pages = !token ? ['Home', 'Login'] : (role === "provider" ? ['Home', 'My Listings'] : ['Home', 'Explore Parking']); 
+  const pages = !token ? ['Home', 'Login'] : (role === "provider" ? ['Home', 'My Listings'] : ['Home', 'Explore', 'Booking']); 
 
   const settings = token ? ['Profile', 'Logout'] : []; // visitor - no setting option
   
@@ -50,8 +50,10 @@ function NavBar() {
       navigate('/');
     } else if (page === 'Login') {
       navigate('/login');
-    } else if (page === 'Explore Parking') {
-      console.log(page);
+    } else if (page === 'Explore') {
+      navigate('/consumer/browse')
+    } else if (page === 'Booking') {
+      navigate('/consumer/booking')
     } else {
       navigate('/provider/dashboard');
     }

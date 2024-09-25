@@ -8,6 +8,7 @@ import Register from './components/RegisterPage/register';
 import VisitorLandingPage from './components/landingpage';
 import VisitorDashboard from './components/Dashboard/VisitorDashboard'
 
+import ConsumerBrowse from './components/Dashboard/ConsumerBrowse';
 import ConsumerDashboard from './components/Dashboard/ConsumerDashboard';
 import ProviderDashboard from './components/Dashboard/ProviderDashboard';
 import Footer from './components/footer';
@@ -45,7 +46,8 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/browse" element={<VisitorDashboard />} />
-        <Route path="/consumer/dashboard" element={<ConsumerDashboard />} />
+        <Route path="/consumer/browse" element={<ConsumerBrowse />} />
+        <Route path="/consumer/booking" element={<ConsumerDashboard />} />
         <Route path="/provider/dashboard" element={<ProviderDashboard />} />
       </Routes>
 

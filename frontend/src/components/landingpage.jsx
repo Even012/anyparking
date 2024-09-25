@@ -1,14 +1,20 @@
-// landingpage is for visitors only 
-// other users(consumers/ providers / admin) have their own dashboard
-
 import React from 'react';
 import { Button, Typography, Container, Box } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+
 
 const VisitorLandingPage = () => {
+  const navigate = useNavigate();
+
+  const handleExplore = () => {
+    const role = localStorage.getItem("role");
+    role ? (navigate('/consumer/browse')) : (navigate('/browse'));  
+  }
+
   return (
     <>
       {/* Main Content */}
-      <Container className="text-center mt-10" sx={{flexGrow: 1}}>
+      <Container className="text-center" sx={{flexGrow: 1, border: 1}}>
         <Typography variant="h3" className="font-bold text-gray-900">
           Welcome to AnyParking
         </Typography>
@@ -18,8 +24,8 @@ const VisitorLandingPage = () => {
         
         {/* Call to Action Buttons */}
         <Box className="mt-8">
-          <Button href="/browse" variant="contained" sx={{mx: 2}}>
-            Explore Available Parking
+          <Button variant="contained" sx={{mx: 2}} onClick={ handleExplore }>
+            Explore Parking
           </Button>
         </Box>
         
