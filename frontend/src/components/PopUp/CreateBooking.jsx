@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Typography, Box, TextField, duration } from '@mui/material';
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Typography, Box, TextField } from '@mui/material';
 import axios from 'axios';
 
 const ListingDetailsDialog = ({ open, onClose, listing }) => {
@@ -7,8 +7,9 @@ const ListingDetailsDialog = ({ open, onClose, listing }) => {
   const [bookingDetails, setBookingDetails] = useState({
     name: '',
     date: '',
+    time: '',
     duration: '',
-    address: listing.address
+    listingId: listing._id
   });
 
   const handleChange = (e) => {
@@ -22,16 +23,24 @@ const ListingDetailsDialog = ({ open, onClose, listing }) => {
   useEffect(() => {
     setBookingDetails((prevDetails) => ({
       ...prevDetails,
-      address: listing.address, // Update address in state when the prop changes
+      listingId: listing._id, // Update address in state when the prop changes
     }));
-  }, [listing.address]);
+  }, [listing._id]);
 
   const handleBookingSubmit = async () => {
-    console.log('Booking Details:', bookingDetails);
-    if(bookingDetails.name && bookingDetails.date && duration) {
+    if(bookingDetails.name && bookingDetails.date && bookingDetails.time && bookingDetails.duration) {
         const token = localStorage.getItem("token");
+        const startTime = new Date(`${bookingDetails.date}T${bookingDetails.time}`); // Combine date and time into a full datetime
+        const endTime = new Date(startTime.getTime() + bookingDetails.duration * 60 * 60 * 1000);
+        const bookingData = {
+          name: bookingDetails.name,
+          startTime,
+          endTime,
+          listingId: bookingDetails.listingId
+        };
+        console.log(bookingData);
         try {
-            const res = await axios.post("http://localhost:8888/bookings/new", bookingDetails, { 
+            const res = await axios.post("http://localhost:8888/bookings/new", bookingData, { 
                 headers: {Authorization: `Bearer ${token}` } 
             });
     
@@ -41,7 +50,7 @@ const ListingDetailsDialog = ({ open, onClose, listing }) => {
             onClose();    // Close the dialog after submission
     
         } catch(error) {
-            console.log(error.response.data.error);
+            alert(error.response.data.error);
         }
 
     } else {
@@ -98,18 +107,34 @@ const ListingDetailsDialog = ({ open, onClose, listing }) => {
             value={bookingDetails.name}
             onChange={handleChange}
           />
-          <TextField
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: 2 }}>
+        <TextField
             label="Date"
             type="date"
             name="date"
             fullWidth
             margin="normal"
             InputLabelProps={{
-              shrink: true,
+            shrink: true,
             }}
             value={bookingDetails.date}
             onChange={handleChange}
-          />
+            sx={{ flex: 1 }} // Ensures the field takes up equal space
+        />
+        <TextField
+            label="Time"
+            type="time"
+            name="time"
+            fullWidth
+            margin="normal"
+            InputLabelProps={{
+            shrink: true,
+            }}
+            value={bookingDetails.time}
+            onChange={handleChange}
+            sx={{ flex: 1 }} // Ensures the field takes up equal space
+        />
+        </Box>
           <TextField
             label="Duration (hours)"
             name="duration"

@@ -154,18 +154,39 @@ export const getAllListings = async () => {
                        Booking Functions
 ***************************************************************/
 export const createBooking = async ({body, email}) => {
-  const { name, date, duration, address } = body;
+  const { name, startTime, endTime, listingId } = body;
+  
   return resourceLock('resourceLock', async (resolve, reject) => {
     try {  
-      // Create a new listing
+      const conflictingBookings = await Booking.find({
+        listingId: listingId,
+        $or: [
+          // New booking starts within an existing booking
+          {
+            startTime: { $lt: startTime }, // Existing booking starts before the new booking ends
+            endTime: { $gt: startTime }, // Existing booking ends after the new booking starts
+          },
+          // Existing booking starts within the new booking range
+          {
+            startTime: { $lt: endTime }, // Existing booking starts before the new booking ends
+            endTime: { $gte: endTime },  // Existing booking ends after or at the new booking end
+          },
+        ]
+      });
+
+      if (conflictingBookings.length > 0) {
+        return reject(new Error('This listing is not available for the requested time.' ));
+      }
+  
+      // Create a new booking
       const newBooking = new Booking({
         name,
         email,
-        date,
-        duration,
-        address
+        startTime,
+        endTime,
+        listingId
       });
-      // Save the listing
+      // Save the booking
       await newBooking.save();
       return resolve({message: 'Listing created!'});
     } catch (error) {

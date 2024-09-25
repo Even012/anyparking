@@ -32,7 +32,7 @@ const listingSchema = new mongoose.Schema({
     title: { type: String, required: true },
     address: { type: String, required: true, unique: true },
     price: { type: Number, required: true },
-    thumbnail: { type: String, default: '../../frontend/src/assets/login2.png' },  // Thumbnail URL or path
+    thumbnail: { type: String, default: "https://gumtreeau-res.cloudinary.com/image/private/t_$_s-l400/gumtree/9f6bfdcc-274f-4b4f-8ba2-b6c909d59171.jpg" },  // Thumbnail URL or path
     metadata: {
         host_email: { type: String },  // You could link this to the User model via email
         availableFrom: { type: Date, required: true }, 
@@ -40,21 +40,21 @@ const listingSchema = new mongoose.Schema({
         createdAt: { type: Date, default: Date.now },
         public: { type: Boolean, default: true},
         coordinates: {type: Array, default: null}
-    }
+    },
   });
   
 // Listing Model
 export const Listing = mongoose.model('Listing', listingSchema);
 
 /***************************************************************
-                      Listing Schema
+                      Booking Schema
 ***************************************************************/
 const bookingSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true},
-  date: { type: Date, required: true },
-  duration: { type: Number, required: true },
-  address: { type: String, required: true},
+  startTime: { type: Date, required: true },
+  endTime: { type: Date, required: true },
+  listingId: { type: mongoose.Schema.Types.ObjectId, ref: 'Listing', required: true },
 });
 
 // Listing Model
