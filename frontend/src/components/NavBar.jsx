@@ -61,7 +61,7 @@ function NavBar() {
   const handleClickSetting = async (page) => {
     handleCloseUserMenu();
     if (page === 'Profile') {
-      navigate('/profile');
+      (role === 'consumer') ? (navigate('/consumer/profile')) : (navigate('/provider/profile'));
     } else if (page === 'Logout') {
       try {
         const res = await axios.post("http://localhost:8888/user/auth/logout/", {}, 

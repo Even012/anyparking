@@ -6,7 +6,8 @@ import {
   createListing,
   getAllListings,
   createBooking,
-  getAllBookings
+  getAllBookings,
+  updateUserDetail
 } from './service.js';
 
 import express from 'express';
@@ -114,6 +115,17 @@ app.get('/bookings/all', authenticateToken, async (req, res) => {
   }
 });
 
+/***************************************************************
+                       UserDetail Functions
+***************************************************************/
+app.put('/user/details', authenticateToken, async (req, res) => {
+  try {
+    const result = await updateUserDetail({body: req.body, email: req.email});
+    res.status(200).json(result);
+  } catch(error) {
+    res.status(400).json({error: error.message});
+  }
+});
 
 // Start the Server
 app.listen(8888, () => {

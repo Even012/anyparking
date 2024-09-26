@@ -1,4 +1,4 @@
-import { User, Listing, Booking } from './models.js';
+import { User, Listing, Booking, UserDetail } from './models.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import AsyncLock from 'async-lock';
@@ -204,6 +204,37 @@ export const getAllBookings = async () => {
       const bookings = await Booking.find();
       console.log(bookings);
       return resolve(bookings);
+    } catch (error) {
+      console.log(error);
+      return reject(new Error('Server error' ));
+    }
+  })
+};
+
+
+/***************************************************************
+                      UserDetail Functions
+***************************************************************/
+export const updateUserDetail = async ({body, email }) => {
+
+  return resourceLock('resourceLock', async (resolve, reject) => {
+    try {  
+      let userDetail = await UserDetail.findOne({ email });
+      if (userDetail) {
+        // If user detail exists, update it
+        userDetail = await UserDetail.findOneAndUpdate({ email }, body, {
+          new: true, // Return the updated document
+          runValidators: true, // Validate against the schema
+        });
+      } else {
+        // If user detail doesn't exist, create a new entry
+        userDetail = new UserDetail({
+          email,
+          ...body, // Spread the updated fields here
+        });
+        await userDetail.save();
+      }
+      return resolve({message: 'Listing created!'});
     } catch (error) {
       console.log(error);
       return reject(new Error('Server error' ));

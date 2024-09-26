@@ -73,6 +73,7 @@ const ListingDetailsDialog = ({ open, onClose, listing }) => {
               objectFit: 'cover',
               borderRadius: '8px',
               mr: 2,
+              flexShrink: 0,
             }}
             alt="Listing thumbnail"
             src={listing.thumbnail}

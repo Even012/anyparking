@@ -54,8 +54,27 @@ const bookingSchema = new mongoose.Schema({
   email: { type: String, required: true},
   startTime: { type: Date, required: true },
   endTime: { type: Date, required: true },
-  listingId: { type: mongoose.Schema.Types.ObjectId, ref: 'Listing', required: true },
+  listingId: { 
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'Listing', 
+    required: true 
+  },
 });
 
-// Listing Model
+// Booking Model
 export const Booking = mongoose.model('Booking', bookingSchema);
+
+/***************************************************************
+                      UserDetail Schema
+***************************************************************/
+const userDetailSchema = new mongoose.Schema({
+  email: { type: String, required: true },
+  name: { type: String},
+  phone: { type: String},
+  address: { type: String},
+  cardNumber: { type: String},  // Store only last 4 digits for security
+  expiryDate: { type: String},  // Format: MM/YY
+  cvv: { type: String}  // Store only encrypted or hashed value for security
+});
+
+export const UserDetail = mongoose.model('UserDetail', userDetailSchema);

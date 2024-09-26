@@ -1,7 +1,6 @@
 import React from 'react';
-import { Box, Typography, Button } from '@mui/material';
+import { Box, Typography} from '@mui/material';
 import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import axios from 'axios';
 
@@ -38,17 +37,17 @@ export default function ConsumerDashboard() {
         <React.Fragment>
         <CardContent>
         <Typography gutterBottom sx={{ color: 'text.primary', fontSize: 14, fontWeight: 'bold' }}>
-            {booking.name}
+            {booking.listingId}
         </Typography>
 
-        <Typography sx={{ color: 'text.secondary', mb: 1.5 }}>{booking.date}</Typography>
+        <Typography sx={{ color: 'text.secondary', mb: 1.5 }}>{booking.email}</Typography>
         <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-            Duration: {booking.duration} h
+            Start time: {booking.startTime} 
+        </Typography>
+        <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
+            End time: {booking.endTime}
         </Typography>
         </CardContent>
-        <CardActions>
-        <Button size="small">Learn More</Button>
-        </CardActions>
     </React.Fragment>
     );
 
