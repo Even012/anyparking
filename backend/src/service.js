@@ -115,7 +115,7 @@ export const logout = async (email) => {
 /***************************************************************
                        Listing Functions
 ***************************************************************/
-export const createListing = async ({ title, address, price, thumbnail, metadata }) => {
+export const createListing = async ({ title, address, pricePerHour, pricePerDay, thumbnail, metadata }) => {
   
   return resourceLock('resourceLock', async (resolve, reject) => {
     try {  
@@ -123,7 +123,8 @@ export const createListing = async ({ title, address, price, thumbnail, metadata
       const newListing = new Listing({
         title,
         address,
-        price, 
+        pricePerHour, 
+        pricePerDay, 
         thumbnail,
         metadata
       });

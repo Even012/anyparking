@@ -12,7 +12,8 @@ const CreateListing = ({ open, setOpen}) => {
   const [listingData, setListingData] = useState({
     title: '',
     address: '',
-    price: null,
+    pricePerHour: null,
+    pricePerDay: null,
     thumbnail: "https://gumtreeau-res.cloudinary.com/image/private/t_$_s-l400/gumtree/9f6bfdcc-274f-4b4f-8ba2-b6c909d59171.jpg", // Default image path
     metadata: {
       host_email: user,
@@ -116,14 +117,25 @@ const CreateListing = ({ open, setOpen}) => {
                 </Grid>
 
                 {/* Price Input */}
-                <Grid item xs={12}>
+                <Grid item xs={12}  sm={6}>
                 <TextField
-                    name="price"
-                    label="Price"
+                    name="pricePerHour"
+                    label="pricePerHour"
                     type="number"
                     fullWidth
                     variant="outlined"
-                    value={listingData.price}
+                    value={listingData.pricePerHour}
+                    onChange={handleChange}
+                />
+                </Grid>
+                <Grid item xs={12}  sm={6}>
+                <TextField
+                    name="pricePerDay"
+                    label="pricePerDay"
+                    type="number"
+                    fullWidth
+                    variant="outlined"
+                    value={listingData.pricePerDay}
                     onChange={handleChange}
                 />
                 </Grid>
@@ -142,7 +154,12 @@ const CreateListing = ({ open, setOpen}) => {
                             },
                           }));
                     }}
-                    renderInput={(params) => <TextField {...params} fullWidth />}
+                    slotProps={{
+                      textField: {
+                        fullWidth: true,
+                        variant: 'outlined',
+                      },
+                    }}
                     />
                 </Grid>
 
@@ -160,7 +177,12 @@ const CreateListing = ({ open, setOpen}) => {
                             },
                         }));
                     }}
-                    renderInput={(params) => <TextField {...params} fullWidth />}
+                    slotProps={{
+                      textField: {
+                        fullWidth: true,
+                        variant: 'outlined',
+                      },
+                    }}
                     />
                 </Grid>
             </Grid>

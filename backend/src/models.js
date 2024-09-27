@@ -31,7 +31,8 @@ export const User = mongoose.model('User', userSchema);
 const listingSchema = new mongoose.Schema({
     title: { type: String, required: true },
     address: { type: String, required: true, unique: true },
-    price: { type: Number, required: true },
+    pricePerHour: { type: Number, required: true },
+    pricePerDay: { type: Number, required: true },
     thumbnail: { type: String, default: "https://gumtreeau-res.cloudinary.com/image/private/t_$_s-l400/gumtree/9f6bfdcc-274f-4b4f-8ba2-b6c909d59171.jpg" },  // Thumbnail URL or path
     metadata: {
         host_email: { type: String },  // You could link this to the User model via email

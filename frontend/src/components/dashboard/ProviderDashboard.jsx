@@ -44,7 +44,7 @@ export default function ProviderDashboard() {
 
         <Typography sx={{ color: 'text.secondary', mb: 1.5 }}>{listing.address}</Typography>
         <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-            ${listing.price}
+            ${listing.pricePerHour}
         </Typography>
         </CardContent>
         <CardActions>

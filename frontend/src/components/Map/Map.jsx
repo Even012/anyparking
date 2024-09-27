@@ -98,7 +98,7 @@ const MapComponent = ({listings, flyToCoordinates}) => {
                 .setLngLat([coordinates[0], coordinates[1]]) // [longitude, latitude]
                 .setPopup(
                   new maplibregl.Popup({ offset: 25 }).setHTML(
-                    `<h3>${listing.title}</h3><p>${"$"} ${listing.price} ${"/h"}</p>`
+                    `<h3>${listing.title}</h3><p>${"$"} ${listing.pricePerHour} ${"/h"}</p>`
                   )
                 ) // Add a popup
                 .addTo(map); // Add marker to the map

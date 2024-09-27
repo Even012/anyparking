@@ -66,7 +66,7 @@ function ConsumerBrowse() {
             <Typography sx={{fontSize: 15, fontWeight: 'bold'}}>{listing.title }</Typography>
             <Typography sx={{fontSize: 12}}>{listing.address }</Typography>
             <Typography>
-                $<Box component="span" sx={{ fontWeight: 'bold' }}>{listing.price}</Box>/h
+                $<Box component="span" sx={{ fontWeight: 'bold' }}>{listing.pricePerHour}</Box>/h
             </Typography>
         </Box>
         <MoreHorizOutlinedIcon sx={{cursor: 'pointer', ml: 'auto'}} onClick={() => {setOpen(true); setSelectedListing(listing);}}/>
