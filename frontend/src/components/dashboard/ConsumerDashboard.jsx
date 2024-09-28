@@ -3,6 +3,7 @@ import { Box, Typography} from '@mui/material';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import axios from 'axios';
+import moment from 'moment';
 
 export default function ConsumerDashboard() {
   
@@ -37,15 +38,15 @@ export default function ConsumerDashboard() {
         <React.Fragment>
         <CardContent>
         <Typography gutterBottom sx={{ color: 'text.primary', fontSize: 14, fontWeight: 'bold' }}>
-            {booking.listingId}
+            {booking.name}
         </Typography>
 
         <Typography sx={{ color: 'text.secondary', mb: 1.5 }}>{booking.email}</Typography>
         <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-            Start time: {booking.startTime} 
+            Start time: {moment(booking.startTime).format('dddd, MMMM Do YYYY, h:mm:ss A')} 
         </Typography>
         <Typography variant="body2" sx={{ fontWeight: 'bold' }}>
-            End time: {booking.endTime}
+            End time: {moment(booking.endTime).format('dddd, MMMM Do YYYY, h:mm:ss A')}
         </Typography>
         </CardContent>
     </React.Fragment>
@@ -59,15 +60,16 @@ export default function ConsumerDashboard() {
         </Box>
 
         <Box sx={{py: 2}}>
-            <Typography variant="h6"> Public Bookings </Typography>
+            <Typography variant="h6"> Existing Bookings </Typography>
             <Box sx={{ py: 1, display: 'flex', flexDirection: 'row', overflowX: 'auto' }}>
-                {bookings ? bookings.map((booking) => (<Card key={booking._id} variant="outlined" sx={{minWidth: '200px', minHeight: '200px', mx: 1}}>{card(booking)}</Card>)) : <></>}
+                {bookings.filter(booking => new Date(booking.endTime )> new Date()) ? bookings.filter(booking => new Date(booking.endTime) > new Date()).map((booking) => (<Card key={booking._id} variant="outlined" sx={{minWidth: '200px', minHeight: '200px', mx: 1}}>{card(booking)}</Card>)) : <></>}
             </Box>   
         </Box>
 
         <Box sx={{py: 2}}>
-            <Typography variant="h6"> Private Bookings </Typography>
+            <Typography variant="h6"> Expired Bookings </Typography>
             <Box sx={{ py: 1, display: 'flex', flexDirection: 'row', overflowX: 'auto' }}>
+            {bookings.filter(booking => new Date(booking.endTime ) < new Date()) ? bookings.filter(booking => new Date(booking.endTime) < new Date()).map((booking) => (<Card key={booking._id} variant="outlined" sx={{minWidth: '200px', minHeight: '200px', mx: 1}}>{card(booking)}</Card>)) : <></>}
             </Box>   
         </Box>
 

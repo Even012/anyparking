@@ -132,6 +132,7 @@ export const createListing = async ({ title, address, pricePerHour, pricePerDay,
       await newListing.save();
       return resolve({message: 'Listing created!'});
     } catch (error) {
+      console.log(error);
       return reject(new Error('Server error' ));
     }
   })

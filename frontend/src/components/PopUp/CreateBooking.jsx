@@ -5,13 +5,13 @@ import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+import moment from 'moment';
 
 const ListingDetailsDialog = ({ open, onClose, listing }) => {
 
   const [totalPrice, setTotalPrice] = useState(0);
   const [bookingDetails, setBookingDetails] = useState({
     type: 'day',
-    name: '',
     date: new Date(), // Default to today's date
     time: new Date(),
     duration: '',
@@ -62,31 +62,38 @@ const ListingDetailsDialog = ({ open, onClose, listing }) => {
   }, [bookingDetails.duration, bookingDetails.type, listing])
 
   const handleBookingSubmit = async () => {
-    if(bookingDetails.name && bookingDetails.date && bookingDetails.time && bookingDetails.duration) {
-        const token = localStorage.getItem("token");
-        const startTime = new Date(`${bookingDetails.date}T${bookingDetails.time}`); // Combine date and time into a full datetime
-        const endTime = new Date(startTime.getTime() + bookingDetails.duration * 60 * 60 * 1000);
-        const bookingData = {
-          name: bookingDetails.name,
-          startTime,
-          endTime,
-          listingId: bookingDetails.listingId
-        };
-        console.log(bookingData);
-        try {
-            const res = await axios.post("http://localhost:8888/bookings/new", bookingData, { 
-                headers: {Authorization: `Bearer ${token}` } 
-            });
-    
-            if(res.status === 200) {
-                console.log("new listing created!")
-            } 
-            onClose();    // Close the dialog after submission
-    
-        } catch(error) {
-            alert(error.response.data.error);
-        }
+    if(bookingDetails.date && bookingDetails.time && bookingDetails.duration) {
 
+
+        const token = localStorage.getItem("token");
+        const startTime = bookingDetails.type === 'hour' ? new Date(`${bookingDetails.date}T${bookingDetails.time}`) : new Date(`${bookingDetails.date}`); 
+        const endTime = bookingDetails.type === 'hour' ? new Date(startTime.getTime() + bookingDetails.duration * 60 * 60 * 1000) : new Date(startTime.getTime() + bookingDetails.duration * 24 * 60 * 60 * 1000);
+        
+        
+        if (startTime < new Date(listing.metadata.availableFrom) || endTime > new Date(listing.metadata.availableUntil) ) {
+          alert("Watch out the availability and select a proper time slot!");
+        } else {
+          const bookingData = {
+            name: listing.address,
+            startTime,
+            endTime,
+            listingId: bookingDetails.listingId
+          };
+          console.log(bookingData);
+          try {
+              const res = await axios.post("http://localhost:8888/bookings/new", bookingData, { 
+                  headers: {Authorization: `Bearer ${token}` } 
+              });
+      
+              if(res.status === 200) {
+                  console.log("new listing created!")
+              } 
+              onClose();    // Close the dialog after submission
+      
+          } catch(error) {
+              alert(error.response.data.error);
+          }
+        }
     } else {
         alert("Please fill all fields!")
     }
@@ -126,9 +133,9 @@ const ListingDetailsDialog = ({ open, onClose, listing }) => {
 
         {/* Additional listing description */}
         <Box mt={2}>
-          <Typography variant="body1">Description:</Typography>
-          <Typography variant="body2" color="text.secondary">
-            {listing.description || 'No description available'}
+          <Typography variant="body1">Availability:</Typography>
+          <Typography variant="body2" color="text.secondary" sx={{fontWeight: 'bold'}}>
+            {moment(listing.metadata.availableFrom).format('dddd, MMMM Do YYYY, h:mm:ss A')} - {moment(listing.metadata.availableUntil).format('dddd, MMMM Do YYYY, h:mm:ss A')}
           </Typography>
         </Box>
 
@@ -143,44 +150,36 @@ const ListingDetailsDialog = ({ open, onClose, listing }) => {
               <FormControlLabel value="day" control={<Radio />} label="By Day" />
             </RadioGroup>
           </FormControl>
-          <TextField
-            label="Your Name"
-            name="name"
-            fullWidth
-            margin="normal"
-            value={bookingDetails.name}
-            onChange={handleChange}
-          />
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: 2 }}>
-        <DatePicker
-            label="Select Date"
-            value={bookingDetails.date}
-            onChange={handleDateChange}
-            slotProps={{
-              textField: {
-                fullWidth: true,
-                variant: 'outlined',
-              },
-            }}
-          />
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: 2, mt: 2 }}>
+          <DatePicker
+              label="Select Date"
+              value={bookingDetails.date}
+              onChange={handleDateChange}
+              slotProps={{
+                textField: {
+                  fullWidth: true,
+                  variant: 'outlined',
+                },
+              }}
+            />
 
-        {/* Time Picker (only if booking by hour) */}
-        {bookingDetails.type === 'hour' && (
-          <TimePicker
-            label="Select Time"
-            value={bookingDetails.time}
-            onChange={handleTimeChange}
-            slotProps={{
-              textField: {
-                fullWidth: true,
-                variant: 'outlined',
-              },
-            }}
-          />
-        )}
+          {/* Time Picker (only if booking by hour) */}
+          {bookingDetails.type === 'hour' && (
+            <TimePicker
+              label="Select Time"
+              value={bookingDetails.time}
+              onChange={handleTimeChange}
+              slotProps={{
+                textField: {
+                  fullWidth: true,
+                  variant: 'outlined',
+                },
+              }}
+            />
+          )}
 
 
-        </Box>
+          </Box>
           <TextField
             label={bookingDetails.type === 'hour' ? "Duration (hours)" : "Duration (days)"}
             name="duration"

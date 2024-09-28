@@ -26,11 +26,12 @@ const CreateListing = ({ open, setOpen}) => {
   const fetchCoordinates = async (address) => {
     try {
       const response = await axios.get(
-        `https://us1.locationiq.com/v1/search.php?key=${locationIqAccessToken}&q=${encodeURIComponent(address)}&format=json`
+        `https://us1.locationiq.com/v1/search?key=${locationIqAccessToken}&q=${encodeURIComponent(address)}&format=json`
       );
       
       // Assuming the first result is the most relevant
       const { lat, lon } = response.data[0];
+      console.log({lat, lon});
       return [lon, lat];  // Return coordinates as [longitude, latitude]
     } catch (error) {
       console.error('Error fetching coordinates:', error);
@@ -45,19 +46,20 @@ const CreateListing = ({ open, setOpen}) => {
     if (listingData.address) {
       // Fetch coordinates only when submitting the form
       const coordinates = await fetchCoordinates(listingData.address);
-
+      console.log(coordinates);
       // If coordinates are successfully fetched, update the metadata coordinates
       if (coordinates) {
-        setListingData((prevData) => ({
-          ...prevData,
+        const updatedListingData = {
+          ...listingData,
           metadata: {
-            ...prevData.metadata,
+            ...listingData.metadata,
             coordinates: coordinates, // Update with fetched coordinates
           },
-        }));
+        };
+        setListingData(updatedListingData);
         try {
             console.log(token);
-            const res = await axios.post("http://localhost:8888/listings/new", listingData,{ 
+            const res = await axios.post("http://localhost:8888/listings/new", updatedListingData,{ 
                 headers: {Authorization: `Bearer ${token}` } 
             });
     
