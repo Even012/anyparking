@@ -70,7 +70,7 @@ const ListingDetailsDialog = ({ open, onClose, listing }) => {
         const endTime = bookingDetails.type === 'hour' ? new Date(startTime.getTime() + bookingDetails.duration * 60 * 60 * 1000) : new Date(startTime.getTime() + bookingDetails.duration * 24 * 60 * 60 * 1000);
         
         
-        if (startTime < new Date(listing.metadata.availableFrom) || endTime > new Date(listing.metadata.availableUntil) ) {
+        if (startTime <= new Date(listing.metadata.availableFrom) || endTime >= new Date(listing.metadata.availableUntil) ) {
           alert("Watch out the availability and select a proper time slot!");
         } else {
           const bookingData = {

@@ -7,7 +7,11 @@ import {
   getAllListings,
   createBooking,
   getAllBookings,
-  updateUserDetail
+  deleteBooking,
+  updateUserDetail,
+  getUserDetail,
+  getUserVehicle,
+  newVehicle
 } from './service.js';
 
 import express from 'express';
@@ -115,6 +119,18 @@ app.get('/bookings/all', authenticateToken, async (req, res) => {
   }
 });
 
+app.delete('/bookings/:id', authenticateToken, async (req, res) => {
+  const bookingId = req.params.id;
+  try {
+    const result = await deleteBooking(bookingId);
+    console.log(result);
+    res.status(200).json(result);
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({error: error.message});
+  }
+});
+
 /***************************************************************
                        UserDetail Functions
 ***************************************************************/
@@ -126,6 +142,44 @@ app.put('/user/details', authenticateToken, async (req, res) => {
     res.status(400).json({error: error.message});
   }
 });
+
+app.get('/user/details', authenticateToken, async (req, res) => {
+  const email = req.email;
+  try {
+    const result = await getUserDetail(email);
+    console.log(result);
+    res.status(200).json(result);
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({error: error.message});
+  }
+});
+
+/***************************************************************
+                       userVehicle Functions
+***************************************************************/
+app.post('/user/vehicles/new', authenticateToken, async (req, res) => {
+  try {
+    const result = await newVehicle({body: req.body, email: req.email});
+    res.status(200).json(result);
+  } catch(error) {
+    res.status(400).json({error: error.message});
+  }
+});
+
+app.get('/user/vehicles', authenticateToken, async (req, res) => {
+  const email = req.email;
+
+  try {
+    const result = await getUserVehicle(email);
+    res.status(200).json(result);
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({error: error.message});
+  }
+});
+
+
 
 // Start the Server
 app.listen(8888, () => {

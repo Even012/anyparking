@@ -1,7 +1,8 @@
-import { User, Listing, Booking, UserDetail } from './models.js';
+import { User, Listing, Booking, UserDetail, UserVehicle } from './models.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import AsyncLock from 'async-lock';
+import mongoose from 'mongoose';
 
 const lock = new AsyncLock();
 const JWT_SECRET = 'giraffegiraffebeetroot';
@@ -198,14 +199,26 @@ export const createBooking = async ({body, email}) => {
   })
 };
 
-
 export const getAllBookings = async () => {
   
   return resourceLock('resourceLock', async (resolve, reject) => {
     try {  
       const bookings = await Booking.find();
-      console.log(bookings);
       return resolve(bookings);
+    } catch (error) {
+      console.log(error);
+      return reject(new Error('Server error' ));
+    }
+  })
+};
+
+export const deleteBooking = async (bookingId) => {
+
+  return resourceLock('resourceLock', async (resolve, reject) => {
+    try {  
+      const objectId = new mongoose.Types.ObjectId(bookingId);
+      await Booking.deleteOne({ _id: objectId }); 
+      return resolve("Booking deleted");
     } catch (error) {
       console.log(error);
       return reject(new Error('Server error' ));
@@ -237,6 +250,57 @@ export const updateUserDetail = async ({body, email }) => {
         await userDetail.save();
       }
       return resolve({message: 'Listing created!'});
+    } catch (error) {
+      console.log(error);
+      return reject(new Error('Server error' ));
+    }
+  })
+};
+
+export const getUserDetail = async (email) => {
+  
+  return resourceLock('resourceLock', async (resolve, reject) => {
+    try {  
+      const userDetail = await UserDetail.findOne({ email });
+      return resolve(userDetail);
+    } catch (error) {
+      console.log(error);
+      return reject(new Error('Server error' ));
+    }
+  })
+};
+
+/***************************************************************
+                      UserVehicle Functions
+***************************************************************/
+export const getUserVehicle = async (email) => {
+  
+  return resourceLock('resourceLock', async (resolve, reject) => {
+    try {  
+      const vehicles = await UserVehicle.find({ email });
+      return resolve(vehicles);
+    } catch (error) {
+      console.log(error);
+      return reject(new Error('Server error' ));
+    }
+  })
+};
+
+export const newVehicle = async ({body, email}) => {
+  const { make, model, year, licensePlate, color } = body;
+  return resourceLock('resourceLock', async (resolve, reject) => {
+    try {  
+      const newVehicle = new UserVehicle({
+        email,
+        make,
+        model,
+        year,
+        licensePlate,
+        color
+      });
+
+      await newVehicle.save();
+      return resolve("New vehicle created!");
     } catch (error) {
       console.log(error);
       return reject(new Error('Server error' ));

@@ -22,9 +22,9 @@ function NavBar() {
   const role = localStorage.getItem("role");
   const pages = !token ? ['Home', 'Login'] : (role === "provider" ? ['Home', 'My Listings'] : ['Home', 'Explore', 'Booking']); 
 
-  const settings = token ? ['Profile', 'Logout'] : []; // visitor - no setting option
+  // const settings = token ? ['Profile', 'Logout'] : []; // visitor - no setting option
   
-  
+  const settings = !token ? [] : (role === "provider" ? ['Profile', 'Logout'] : ['Profile', 'Vehicle', 'Logout']); 
   const navigate = useNavigate();
 
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -76,7 +76,9 @@ function NavBar() {
       } catch(error) {
         console.log(error.response.data.error);
       }
-    } 
+    } else {
+      navigate('consumer/vehicle');
+    }
   }
   return (
     <AppBar position="static" sx={{ backgroundColor: '#00A47C' }}>

@@ -14,6 +14,7 @@ import ProviderDashboard from './components/Dashboard/ProviderDashboard';
 import Footer from './components/footer';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import ConsumerProfile from './components/Profile/ConsumerProfile';
+import ConsumerVehicle from './components/Profile/ConsumerVehicle';
 
 
 const theme = createTheme({
@@ -50,6 +51,7 @@ function App() {
         <Route path="/consumer/browse" element={<ConsumerBrowse />} />
         <Route path="/consumer/booking" element={<ConsumerDashboard />} />
         <Route path="/consumer/profile" element={<ConsumerProfile />} />
+        <Route path="/consumer/vehicle" element={<ConsumerVehicle />} />
         <Route path="/provider/dashboard" element={<ProviderDashboard />} />
       </Routes>
 

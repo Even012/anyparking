@@ -79,3 +79,17 @@ const userDetailSchema = new mongoose.Schema({
 });
 
 export const UserDetail = mongoose.model('UserDetail', userDetailSchema);
+
+/***************************************************************
+                      UserDetail Schema
+***************************************************************/
+const userVehicleSchema = new mongoose.Schema({
+  email: { type: String, required: true },
+  make: { type: String, required: true },   // e.g., Toyota
+  model: { type: String, required: true },  // e.g., Camry
+  year: { type: String, required: true },   // e.g., 2020
+  licensePlate: { type: String, required: true }, // e.g., XYZ123
+  color: { type: String, required: true },  // e.g., Black
+}, { timestamps: true });
+
+export const UserVehicle = mongoose.model('UserVehicle', userVehicleSchema);

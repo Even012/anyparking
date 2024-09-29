@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, TextField, Typography, IconButton } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import SaveIcon from '@mui/icons-material/Save';
@@ -26,6 +26,31 @@ const ConsumerProfile = () => {
     expiryDate: false,
     cvv: false
   });
+
+  useEffect(()=>{
+    const fetchdata = async () => {
+      try {
+        const res = await axios.get(`http://localhost:8888/user/details`, { 
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        console.log(res.data);
+        const userDetail = res.data;
+        // set formValues using userDetail
+        setFormValues({
+          name: userDetail.name || '',
+          phone: userDetail.phone || '',
+          address: userDetail.address || '',
+          cardNumber: userDetail.cardNumber || '', // Show only the last 4 digits
+          expiryDate: userDetail.expiryDate || '',
+          cvv: '***' // Masked CVV for security
+        });
+      } catch(error) {
+        console.log(error.response ? error.response.data : error.message);
+      }
+    }
+
+    fetchdata();
+  }, [token])
 
   // Handle input change for form values
   const handleChange = (event) => {
