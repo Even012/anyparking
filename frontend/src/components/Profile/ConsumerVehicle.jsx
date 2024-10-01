@@ -2,12 +2,32 @@ import React, { useState } from 'react';
 import { Box, Typography, Card, CardContent, Button } from '@mui/material';
 import CreateVehicle from '../PopUp/CreateVehicle';
 import axios from 'axios';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const UserVehicle = () => {
   // State for user's vehicles, assuming user can have more than one vehicle
   const [vehicles, setVehicles] = useState([]);
   const token = localStorage.getItem("token");
   const [open, setOpen] = useState(false);
+  const [refresh, setRefresh] = useState(false);
+
+  const handleDelete = async (id) => {
+    try {
+        const res = await axios.delete(`http://localhost:8888/user/vehicles/${id}`, { 
+            headers: { Authorization: `Bearer ${token}` }
+        });
+        if (res.status === 200) {
+            setRefresh(!refresh);
+        }
+    } catch (error) {
+        if (error.response) {
+            console.log(error.response.data.error);  
+        } else {
+            console.log('An error occurred while fetching the listings.');
+        }
+    }
+  }
+
 
   React.useEffect(() => {
     const fetchListings = async () => {
@@ -15,7 +35,6 @@ const UserVehicle = () => {
             const res = await axios.get("http://localhost:8888/user/vehicles", { 
                 headers: { Authorization: `Bearer ${token}` }
             });
-            console.log(res.data);
             if (res.status === 200) {
                 setVehicles(res.data);  
             } else {
@@ -30,7 +49,7 @@ const UserVehicle = () => {
         }
     };
     fetchListings();
-  }, [token, open]); 
+  }, [token, open, refresh]); 
 
 
   const vehicleCard = (vehicle) => (
@@ -38,10 +57,11 @@ const UserVehicle = () => {
     <CardContent>
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
         {/* Vehicle Make */}
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <Typography variant="body1" sx={{ flexGrow: 1 }}>
               <strong>Make:</strong> {vehicle.make}
             </Typography>
+            <DeleteIcon onClick={() => handleDelete(vehicle._id)}></DeleteIcon>
         </Box>
 
         {/* Vehicle Model */}

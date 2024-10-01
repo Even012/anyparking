@@ -11,7 +11,8 @@ import {
   updateUserDetail,
   getUserDetail,
   getUserVehicle,
-  newVehicle
+  newVehicle,
+  deleteUserVehicle
 } from './service.js';
 
 import express from 'express';
@@ -172,6 +173,19 @@ app.get('/user/vehicles', authenticateToken, async (req, res) => {
 
   try {
     const result = await getUserVehicle(email);
+    res.status(200).json(result);
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({error: error.message});
+  }
+});
+
+app.delete('/user/vehicles/:id', authenticateToken, async (req, res) => {
+  const id = req.params.id;
+  const email = req.email;
+
+  try {
+    const result = await deleteUserVehicle({id, email});
     res.status(200).json(result);
   } catch (error) {
     console.log(error);

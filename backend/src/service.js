@@ -307,3 +307,21 @@ export const newVehicle = async ({body, email}) => {
     }
   })
 };
+
+export const deleteUserVehicle = async ({id, email}) => {
+  
+  return resourceLock('resourceLock', async (resolve, reject) => {
+    try {  
+      const vehicle = await UserVehicle.findOne({ _id: id, email });
+
+      if (!vehicle) {
+        return reject(new Error('Vehicle not found or does not belong to the user!'));
+      }
+      await UserVehicle.deleteOne({ _id: id });
+      return resolve('Vehicle deleted!');
+    } catch (error) {
+      console.log(error);
+      return reject(new Error('Server error' ));
+    }
+  })
+};
