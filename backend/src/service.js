@@ -153,6 +153,64 @@ export const getAllListings = async () => {
   })
 };
 
+export const getLikedListings = async (email) => {
+  
+  return resourceLock('resourceLock', async (resolve, reject) => {
+    try {
+      const likedListings = await Listing.find({ 'metadata.likedBy': email });
+      
+      console.log(email);
+      resolve(likedListings);
+    } catch (error) {
+      return reject(new Error('Server error' ));
+    }
+  })
+};
+
+export const likeListing = async ({listingId, email}) => {
+  return resourceLock('resourceLock', async (resolve, reject) => {
+    try {
+      // Update the listing by adding the email to the likedBy array if it's not already there
+      const updatedListing = await Listing.findOneAndUpdate(
+        {_id: listingId},
+        { $addToSet: { 'metadata.likedBy': email } },  // $addToSet ensures no duplicates
+        { new: true }  // Return the updated document
+      );
+  
+      if (!updatedListing) {
+        reject(new Error('Listing not found'));
+      }
+  
+      return resolve('like Added');
+    } catch (error) {
+      console.log(error);
+      return reject(new Error('Server error' ));
+    }
+  })
+}
+
+export const unlikeListing = async ({listingId, email}) => {
+  return resourceLock('resourceLock', async (resolve, reject) => {
+    try {
+      // Update the listing by adding the email to the likedBy array if it's not already there
+      const updatedListing = await Listing.findOneAndUpdate(
+        {_id: listingId},
+        { $pull: { 'metadata.likedBy': email } },  
+        { new: true }  // Return the updated document
+      );
+  
+      if (!updatedListing) {
+        reject(new Error('Listing not found'));
+      }
+  
+      return resolve('like removed');
+    } catch (error) {
+      console.log(error);
+      return reject(new Error('Server error' ));
+    }
+  })
+}
+
 /***************************************************************
                        Booking Functions
 ***************************************************************/

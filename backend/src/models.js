@@ -40,7 +40,9 @@ const listingSchema = new mongoose.Schema({
         availableUntil: { type: Date, required: true }, 
         createdAt: { type: Date, default: Date.now },
         public: { type: Boolean, default: true},
-        coordinates: {type: Array, default: null}
+        coordinates: {type: Array, default: null},
+        reviews: {type: Array, default: []},
+        likedBy: {type: Array, default: []}
     },
   });
   

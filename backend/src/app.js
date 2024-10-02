@@ -5,7 +5,10 @@ import {
   logout,
   createListing,
   getAllListings,
+  getLikedListings,
   createBooking,
+  likeListing,
+  unlikeListing,
   getAllBookings,
   deleteBooking,
   updateUserDetail,
@@ -95,6 +98,44 @@ app.get('/listings/all', async (req, res) => {
     res.status(400).json({error: error.message});
   }
 });
+
+app.get('/listings/liked', authenticateToken, async (req, res) => {
+  const email = req.email; 
+  try {
+    const result = await getLikedListings(email);
+    console.log(result);
+    res.status(200).json(result);
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({error: error.message});
+  }
+});
+
+app.post('/listings/:listingId/like', authenticateToken, async (req, res) => {
+  const listingId = req.params.listingId;
+  const email = req.email;
+  try {
+    const result = await likeListing({listingId, email});
+    console.log(result);
+    res.status(200).json(result);
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({error: error.message});
+  }
+})
+
+app.post('/listings/:listingId/unlike', authenticateToken, async (req, res) => {
+  const listingId = req.params.listingId;
+  const email = req.email;
+  try {
+    const result = await unlikeListing({listingId, email});
+    console.log(result);
+    res.status(200).json(result);
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({error: error.message});
+  }
+})
 
 /***************************************************************
                        Booking Functions
