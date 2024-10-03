@@ -9,6 +9,7 @@ import {
   createBooking,
   likeListing,
   unlikeListing,
+  reviewListing,
   getAllBookings,
   deleteBooking,
   updateUserDetail,
@@ -129,6 +130,20 @@ app.post('/listings/:listingId/unlike', authenticateToken, async (req, res) => {
   const email = req.email;
   try {
     const result = await unlikeListing({listingId, email});
+    console.log(result);
+    res.status(200).json(result);
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({error: error.message});
+  }
+})
+
+app.post('/listings/:listingId/review', authenticateToken, async (req, res) => {
+  const listingId = req.params.listingId;
+  const body = req.body;
+  const email = req.email;
+  try {
+    const result = await reviewListing({listingId, body, email});
     console.log(result);
     res.status(200).json(result);
   } catch (error) {

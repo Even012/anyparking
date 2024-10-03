@@ -7,12 +7,16 @@ import moment from 'moment';
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import RateReviewIcon from '@mui/icons-material/RateReview';
+import ReviewPopupCard from '../PopUp/CreateReview';
 
 export default function ConsumerDashboard() {
   
     const [bookings, setBookings] = React.useState([]);   
     const [likedListings, setLikedListings] = React.useState([]);   
     const [refresh, setRefresh] = React.useState(false); 
+    const [open, setOpen] = React.useState(false); // open review dialog
+
+    const [selectedListing, setSelectedListing] = React.useState('');
 
     const token = localStorage.getItem("token");
     console.log(likedListings);
@@ -66,8 +70,6 @@ export default function ConsumerDashboard() {
         }
       }     
     }
-
-
 
     React.useEffect(() => {
         const fetchBookings = async () => {
@@ -142,12 +144,11 @@ export default function ConsumerDashboard() {
         </Box>
         :
         <Box sx={{display: 'flex', justifyContent: 'flex-end'}}>
-          <RateReviewIcon sx={{cursor: 'pointer'}}></RateReviewIcon>
-        </Box>
-        
+          <RateReviewIcon sx={{cursor: 'pointer'}} onClick={() => { setOpen(true); setSelectedListing(booking.listingId); }}></RateReviewIcon>
+        </Box>        
         }
-
         </CardContent>
+        
     </React.Fragment>
     );
 
@@ -171,7 +172,7 @@ export default function ConsumerDashboard() {
             {bookings.filter(booking => new Date(booking.endTime ) < new Date()) ? bookings.filter(booking => new Date(booking.endTime) < new Date()).map((booking) => (<Card key={booking._id} variant="outlined" sx={{minWidth: '300px', minHeight: '200px', mx: 1}}>{card(booking)}</Card>)) : <></>}
             </Box>   
         </Box>
-
+        <ReviewPopupCard open={open} handleClose={() => { setOpen(false); }} listingId={selectedListing}/>
     </Box>
   )
 }

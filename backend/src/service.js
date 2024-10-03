@@ -211,6 +211,27 @@ export const unlikeListing = async ({listingId, email}) => {
   })
 }
 
+export const reviewListing = async ({listingId, body, email}) => {
+  return resourceLock('resourceLock', async (resolve, reject) => {
+    try {
+      const updatedListing = await Listing.findByIdAndUpdate(
+        listingId,
+        { $push: { 'metadata.reviews': { email, body } } },  // Push the review object into reviews array
+        { new: true, useFindAndModify: false }  // Return the updated document
+      );
+  
+      if (!updatedListing) {
+        reject(new Error('Listing not found'));
+      }
+  
+      return resolve('review added!');
+    } catch (error) {
+      console.log(error);
+      return reject(new Error('Server error' ));
+    }
+  })
+}
+
 /***************************************************************
                        Booking Functions
 ***************************************************************/
