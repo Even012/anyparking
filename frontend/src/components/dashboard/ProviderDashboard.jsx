@@ -48,7 +48,7 @@ export default function ProviderDashboard() {
         </Typography>
         </CardContent>
         <CardActions>
-        <Button size="small">Learn More</Button>
+        <Button size="small">update</Button>
         </CardActions>
     </React.Fragment>
     );
@@ -63,7 +63,7 @@ export default function ProviderDashboard() {
         <Box sx={{py: 2}}>
             <Typography variant="h6"> Public Listings </Typography>
             <Box sx={{ py: 1, display: 'flex', flexDirection: 'row', overflowX: 'auto' }}>
-                {listings ? listings.map((listing) => (<Card key={listing._id} variant="outlined" sx={{minWidth: '200px', minHeight: '200px', mx: 1}}>{card(listing)}</Card>)) : <></>}
+                {listings ? listings.map((listing) => (<Card key={listing._id} variant="outlined" sx={{minWidth: '300px', minHeight: '200px', mx: 1}}>{card(listing)}</Card>)) : <></>}
             </Box>   
         </Box>
 
