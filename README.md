@@ -6,12 +6,18 @@ The **Car Space Renting Management System** is a web-based platform that facilit
 ---
 
 ## **Table of Contents**
+- [Technologies used](#technologies)
 - [Installation](#installation)
 - [Usage](#usage)
 - [Features](#features)
-- [License](#license)
 
 ---
+
+## **Technologies**
+- Frontend: React for building the user interface.
+- Server: Express.js for handling API requests.
+- Database: MongoDB for storing contact data.
+- Docker: For containerizing the application.
 
 ## **Installation**
 
@@ -26,3 +32,45 @@ The **Car Space Renting Management System** is a web-based platform that facilit
 
    ```bash
    git clone https://github.com/Even012/anyparking.git
+
+## **Usage**
+
+### For Providers
+- Providers can register their car spaces by providing details such as address, cost per hour/day, availability, and bank account details.
+- They can also update or delete the details of their registered car spaces.
+
+### For Consumers
+- Consumers can search for available car spaces by entering a location or browsing through listed spaces.
+- They can view the details of each car space, such as its address, availability, and price per hour/day.
+- Consumers can book a car space by specifying the duration of their booking.
+- Payments can be made online after booking.
+- Consumers can view, like, and cancel their bookings at any time.
+- The system automatically recommends new car spaces based on the consumer’s past bookings and preferences.
+
+### For Admins
+- Admins can manage all registered car spaces.
+- They can view, update, and delete car space details as necessary.
+- Admins can also oversee all bookings and payments.
+
+
+## **Features**
+### User Roles: 
+- Three user types (Admin, Provider, Consumer), each with different access levels.
+### Car Space Management:
+- Providers can register, update, and delete car spaces.
+- Admins have full control over all registered car spaces.
+### Booking Management:
+- Consumers can browse available car spaces and book them for a specific time.
+- The system calculates total booking costs based on hourly/daily rates.
+- Consumers can cancel bookings within a certain time period.
+### Billing and Payments:
+- Consumers can pay for bookings online.
+- The system deducts a 15% service fee and transfers the remaining payment to the provider’s bank account.
+- Automatic bill generation for consumers.
+### Car Space Recommendations: 
+- Personalized recommendations based on past bookings.
+### Security:
+- User authentication (admin, provider, consumer) for sensitive data updates.
+- Data validation to ensure availability of car spaces during booking.
+- Feedback System: Consumers can leave feedback by “liking” a car space they have used.
+- Auto-Cancel: Reservations automatically cancel if not confirmed within a specific time window.
