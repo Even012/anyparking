@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import maplibregl from 'maplibre-gl'; // Import MapLibre GL JS
 import 'maplibre-gl/dist/maplibre-gl.css'; // Import MapLibre GL CSS
+import axios from 'axios';
 
-const MapComponent = ({listings, flyToCoordinates}) => {
+const MapComponent = ({listings, flyToCoordinates, city}) => {
   const mapContainerRef = useRef(null); // Reference for the map container
   const mapInstanceRef = useRef(null);  // Reference to store the map instance
   const locationIqAccessToken = 'pk.dadad7861429156330de883f13d575ee';
   const [coordinates, setCoordinates] = useState({ latitude: 14.74, longitude: 49.3 });
-
   
   useEffect(() => {
     const fetchLocation = () => {
@@ -27,9 +27,22 @@ const MapComponent = ({listings, flyToCoordinates}) => {
       }
     };
 
-    // Call the fetchLocation function
-    fetchLocation();
-  }, []);  // Empty array ensures the effect only runs once, on mount
+    const fetchCoordinates = async (address) => {
+      try {
+        const response = await axios.get(
+          `https://us1.locationiq.com/v1/search?key=${locationIqAccessToken}&q=${address}&format=json`
+        );
+
+        const { lat, lon } = response.data[0];
+        console.log({city, lat, lon})
+        setCoordinates({latitude: lat, longitude: lon});
+      } catch (error) {
+        console.log('Error fetching coordinates:', error);
+      }
+    };
+  
+    city ? fetchCoordinates(city) : fetchLocation();
+  }, [city]);  
 
 
   // map display

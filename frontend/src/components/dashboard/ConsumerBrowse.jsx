@@ -6,8 +6,11 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import axios from "axios";
 import MoreHorizOutlinedIcon from '@mui/icons-material/MoreHorizOutlined';
 import ListingDetailsDialog from "../PopUp/CreateBooking";
+import { useLocation } from 'react-router-dom';
 
 function ConsumerBrowse() {
+    const location = useLocation();
+    const { city } = location.state || {};
 
     const [listings, setListings] = React.useState(null);   
     const theme = useTheme();
@@ -88,7 +91,7 @@ function ConsumerBrowse() {
       { selectedListing && (<ListingDetailsDialog open={open} onClose={()=>{setOpen(false);}} listing={selectedListing} />) }
       {/* RIGHT PART (MAP) */}
       <Box sx={{ width: rightBoxWidth, height: isSmallScreen ? '50vh' : 'auto', }}>
-        <MapComponent listings={listings} flyToCoordinates={flyToCoordinates}/>
+        <MapComponent listings={listings} flyToCoordinates={flyToCoordinates} city={city}/>
       </Box>
 
     </Box>

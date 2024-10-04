@@ -1,5 +1,6 @@
-import React from 'react';
+import {useState} from 'react';
 import { Typography, Container, Box, TextField, Button, Grid, Card, CardActionArea, CardMedia, CardContent } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 const cities = [
   { name: 'Sydney', img: 'https://images.luxuryescapes.com/q_auto:eco/ykj287ffgcjqr9486w5c' },
@@ -14,6 +15,27 @@ const cities = [
 
 
 const VisitorLandingPage = () => {
+  
+  const navigate = useNavigate();
+  const handleClick = (cityName) => {
+    navigate('/consumer/browse', { state: { city: cityName } });
+  }
+
+  const [searchQuery, setSearchQuery] = useState(''); // State to store input value
+
+  // Handle input change
+  const handleInputChange = (e) => {
+    setSearchQuery(e.target.value); // Update state with input value
+  };
+
+  // Handle search submission
+  const handleSearchClick = () => {
+    if (searchQuery) {
+      navigate('/consumer/browse', { state: { city: searchQuery } });
+    } else {
+      alert('Please enter a location to search.');
+    }
+  };
 
 
   return (
@@ -24,12 +46,13 @@ const VisitorLandingPage = () => {
           {/* Search Bar */}
           <Box sx={{ display: 'flex', justifyContent: 'center', my: '30px' }}>
             <TextField
-              label="Input Address, Suburb or City to explore parking"
+              label="Input place to explore parking"
               variant="outlined"
               fullWidth
+              onChange={handleInputChange} 
               sx={{ maxWidth: '750px', marginRight: '10px' }}
             />
-            <Button variant="contained" color="primary" sx={{ height: '55px', minWidth: '100px' }}>
+            <Button variant="contained" color="primary" onClick={handleSearchClick} sx={{ height: '55px', minWidth: '100px' }}>
               Search
             </Button>
           </Box>
@@ -38,7 +61,7 @@ const VisitorLandingPage = () => {
           <Grid container spacing={4} justifyContent="center">
             {cities.map((city) => (
               <Grid item xs={12} sm={6} md={3} key={city.name}>
-                <Card>
+                <Card onClick={() => handleClick(city.name)}>
                   <CardActionArea>
                     <CardMedia
                       component="img"
