@@ -7,6 +7,9 @@ import {
   getAllListings,
   getLikedListings,
   createBooking,
+  updateListing,
+  publishListing,
+  unpublishListing,
   likeListing,
   unlikeListing,
   reviewListing,
@@ -111,6 +114,43 @@ app.get('/listings/liked', authenticateToken, async (req, res) => {
     res.status(400).json({error: error.message});
   }
 });
+
+app.post('/listings/:listingId/update', authenticateToken, async (req, res) => {
+  const listingId = req.params.listingId;
+  const body = req.body;
+  try {
+    const result = await updateListing({listingId, body});
+    console.log(result);
+    res.status(200).json(result);
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({error: error.message});
+  }
+})
+
+app.post('/listings/:listingId/publish', authenticateToken, async (req, res) => {
+  const listingId = req.params.listingId;
+  try {
+    const result = await publishListing(listingId);
+    console.log(result);
+    res.status(200).json(result);
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({error: error.message});
+  }
+})
+
+app.post('/listings/:listingId/unpublish', authenticateToken, async (req, res) => {
+  const listingId = req.params.listingId;
+  try {
+    const result = await unpublishListing(listingId);
+    console.log(result);
+    res.status(200).json(result);
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({error: error.message});
+  }
+})
 
 app.post('/listings/:listingId/like', authenticateToken, async (req, res) => {
   const listingId = req.params.listingId;

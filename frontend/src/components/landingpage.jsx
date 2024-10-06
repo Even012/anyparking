@@ -46,7 +46,7 @@ const VisitorLandingPage = () => {
           {/* Search Bar */}
           <Box sx={{ display: 'flex', justifyContent: 'center', my: '30px' }}>
             <TextField
-              label="Input place to explore parking"
+              label="Where to explore parking"
               variant="outlined"
               fullWidth
               onChange={handleInputChange} 

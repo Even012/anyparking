@@ -167,6 +167,69 @@ export const getLikedListings = async (email) => {
   })
 };
 
+export const updateListing = async ({listingId, body}) => {
+  const { title, address, pricePerHour, pricePerDay, thumbnail, metadata } = body;
+  return resourceLock('resourceLock', async (resolve, reject) => {
+    try {
+      const listing = await Listing.findById(listingId);
+      if (!listing) {
+        reject(new Error('Listing not found'));
+      }
+      listing.title = title;
+      listing.address = address;
+      listing.pricePerHour = pricePerHour;
+      listing.pricePerDay = pricePerDay;
+      listing.thumbnail = thumbnail || listing.thumbnail; // Keep existing thumbnail if not updated
+      listing.metadata = {
+        ...listing.metadata,
+        ...metadata  // Update metadata (host_email, availableFrom, availableUntil, coordinates)
+      };
+  
+      await listing.save();
+      return resolve('listing updated');
+    } catch (error) {
+      console.log(error);
+      return reject(new Error('Server error' ));
+    }
+  })
+}
+
+export const publishListing = async (listingId) => {
+  return resourceLock('resourceLock', async (resolve, reject) => {
+    try {
+      // Update the listing by adding the email to the likedBy array if it's not already there
+      const listing = await Listing.findById(listingId)
+      if (!listing) {
+        reject(new Error('Listing not found'));
+      }
+      listing.metadata.public = true;
+      await listing.save();
+      return resolve('listing published');
+    } catch (error) {
+      console.log(error);
+      return reject(new Error('Server error' ));
+    }
+  })
+}
+
+export const unpublishListing = async (listingId) => {
+  return resourceLock('resourceLock', async (resolve, reject) => {
+    try {
+      // Update the listing by adding the email to the likedBy array if it's not already there
+      const listing = await Listing.findById(listingId)
+      if (!listing) {
+        reject(new Error('Listing not found'));
+      }
+      listing.metadata.public = false;
+      await listing.save();
+      return resolve('listing unpublished');
+    } catch (error) {
+      console.log(error);
+      return reject(new Error('Server error' ));
+    }
+  })
+}
+
 export const likeListing = async ({listingId, email}) => {
   return resourceLock('resourceLock', async (resolve, reject) => {
     try {

@@ -5,10 +5,14 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CreateListing from '../PopUp/CreateListing';
 import axios from 'axios';
+import UpdateListingDialog from '../PopUp/UpdateListing';
 
 export default function ProviderDashboard() {
     const [open, setOpen] = React.useState(false);      // open the create-listing window
+    const [openEdit, setOpenEdit] = React.useState(false);      // open the update-listing window
     const [listings, setListings] = React.useState(null);   
+    const [selectedListing, setSelectedListing] = React.useState(null);
+    const [refresh, setRefresh] = React.useState(false);
 
     const token = localStorage.getItem("token");
 
@@ -32,8 +36,39 @@ export default function ProviderDashboard() {
         };
     
         fetchListings();
-      }, [token, open]); 
+      }, [token, open, openEdit, refresh]); 
 
+    const handleUnpublish = async (listingId) => {
+      try {
+        const res = await axios.post(`http://localhost:8888/listings/${listingId}/unpublish`, {}, { 
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        console.log(res.data);
+        setRefresh((prev) => !prev);
+      } catch (error) {
+        if (error.response) {
+          console.log(error.response.data.error);  // Set error message if server responds with an error
+        } else {
+          console.log('An error occurred while fetching the bookings.');
+        }
+      }     
+    }
+
+    const handlePublish = async (listingId) => {
+      try {
+        const res = await axios.post(`http://localhost:8888/listings/${listingId}/publish`, {}, { 
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        console.log(res.data);
+        setRefresh((prev) => !prev);
+      } catch (error) {
+        if (error.response) {
+          console.log(error.response.data.error);  // Set error message if server responds with an error
+        } else {
+          console.log('An error occurred while fetching the bookings.');
+        }
+      }     
+    }
 
     const card = (listing) => (
         <React.Fragment>
@@ -48,7 +83,13 @@ export default function ProviderDashboard() {
         </Typography>
         </CardContent>
         <CardActions>
-        <Button size="small">update</Button>
+          <Button size="small" onClick={() => {setOpenEdit(true); setSelectedListing(listing)}}>update</Button>
+          {listing.metadata.public === true 
+            ? 
+          (<Button size="small" onClick={() => { handleUnpublish(listing._id); }}>unpublish</Button>)
+            :
+          (<Button size="small" onClick={() => { handlePublish(listing._id); }}>publish</Button>)
+          }
         </CardActions>
     </React.Fragment>
     );
@@ -63,19 +104,19 @@ export default function ProviderDashboard() {
         <Box sx={{py: 2}}>
             <Typography variant="h6"> Public Listings </Typography>
             <Box sx={{ py: 1, display: 'flex', flexDirection: 'row', overflowX: 'auto' }}>
-                {listings ? listings.map((listing) => (<Card key={listing._id} variant="outlined" sx={{minWidth: '300px', minHeight: '200px', mx: 1}}>{card(listing)}</Card>)) : <></>}
+                {listings ? listings.filter(listing => listing.metadata.public === true ).map((listing) => (<Card key={listing._id} variant="outlined" sx={{minWidth: '300px', minHeight: '200px', mx: 1}}>{card(listing)}</Card>)) : <></>}
             </Box>   
         </Box>
 
         <Box sx={{py: 2}}>
             <Typography variant="h6"> Private Listings </Typography>
             <Box sx={{ py: 1, display: 'flex', flexDirection: 'row', overflowX: 'auto' }}>
-
-           
+              {listings ? listings.filter((listing) => listing.metadata.public === false ).map((listing) => (<Card key={listing._id} variant="outlined" sx={{minWidth: '300px', minHeight: '200px', mx: 1}}>{card(listing)}</Card>)) : <></>}
             </Box>   
         </Box>
 
         <CreateListing open={open} setOpen={setOpen}/>
+        <UpdateListingDialog open={openEdit} onClose={()=>{setOpenEdit(false);}} listing={selectedListing}/>
     </Box>
   )
 }
