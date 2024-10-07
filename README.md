@@ -18,6 +18,7 @@ The **Car Space Renting Management System** is a web-based platform that facilit
 - Server: Express.js for handling API requests.
 - Database: MongoDB for storing contact data.
 - Docker: For containerizing the application.
+- Documatation: Swagger UI for api documatation.
 
 ## **Installation**
 
@@ -33,6 +34,34 @@ The **Car Space Renting Management System** is a web-based platform that facilit
    ```bash
    git clone https://github.com/Even012/anyparking.git
 
+2. Run the app
+
+   Run the app backend
+   ```bash
+   cd anyparking/backend
+   npm install
+   node app.js
+   ```
+   
+   Run the app frontend
+   ```bash
+   cd anyparking/frontend
+   npm install
+   npm start
+   ```
+   
+4. View the app
+
+   View the app backend
+   ```bash
+   http://localhost:8888/api-docs/
+   ```
+
+   View the app frontend
+   ```bash
+   http://localhost:3000/
+   ```
+
 ## **Usage**
 
 ### For Providers
@@ -43,11 +72,11 @@ The **Car Space Renting Management System** is a web-based platform that facilit
 - Consumers can search for available car spaces by entering a location or browsing through listed spaces.
 - They can view the details of each car space, such as its address, availability, and price per hour/day.
 - Consumers can book a car space by specifying the duration of their booking.
-- Payments can be made online after booking.
+- Payments can be made online after booking. (to do)
 - Consumers can view, like, and cancel their bookings at any time.
-- The system automatically recommends new car spaces based on the consumer’s past bookings and preferences.
+- The system automatically recommends new car spaces based on the consumer’s past bookings and preferences. (to do)
 
-### For Admins
+### For Admins (to do)
 - Admins can manage all registered car spaces.
 - They can view, update, and delete car space details as necessary.
 - Admins can also oversee all bookings and payments.
