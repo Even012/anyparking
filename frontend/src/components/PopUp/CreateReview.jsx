@@ -12,7 +12,7 @@ const ReviewPopupCard = ({ open, handleClose, listingId }) => {
     const reviewData = { reviewText, rating };
     const token = localStorage.getItem("token");
     try {
-        const res = await axios.post(`http://localhost:8888/listings/${listingId}/review`, reviewData, 
+        const res = await axios.put(`http://localhost:8888/listings/${listingId}/review`, reviewData, 
             { headers: {Authorization: `Bearer ${token}` } }
         );
         console.log(res);

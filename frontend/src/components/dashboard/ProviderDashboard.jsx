@@ -40,7 +40,7 @@ export default function ProviderDashboard() {
 
     const handleUnpublish = async (listingId) => {
       try {
-        const res = await axios.post(`http://localhost:8888/listings/${listingId}/unpublish`, {}, { 
+        const res = await axios.put(`http://localhost:8888/listings/${listingId}/unpublish`, {}, { 
           headers: { Authorization: `Bearer ${token}` }
         });
         console.log(res.data);
@@ -56,7 +56,7 @@ export default function ProviderDashboard() {
 
     const handlePublish = async (listingId) => {
       try {
-        const res = await axios.post(`http://localhost:8888/listings/${listingId}/publish`, {}, { 
+        const res = await axios.put(`http://localhost:8888/listings/${listingId}/publish`, {}, { 
           headers: { Authorization: `Bearer ${token}` }
         });
         console.log(res.data);

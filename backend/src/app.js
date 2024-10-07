@@ -30,6 +30,12 @@ app.use(cors());
 // Middleware to parse incoming JSON requests
 app.use(express.json());
 
+import swaggerUi from 'swagger-ui-express';
+import fs from 'fs';
+import yaml from 'yaml';
+
+const swaggerDocument = yaml.parse(fs.readFileSync('./swagger.yaml', 'utf8'));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 /***************************************************************
                        User Auth Functions
@@ -115,7 +121,7 @@ app.get('/listings/liked', authenticateToken, async (req, res) => {
   }
 });
 
-app.post('/listings/:listingId/update', authenticateToken, async (req, res) => {
+app.put('/listings/:listingId/update', authenticateToken, async (req, res) => {
   const listingId = req.params.listingId;
   const body = req.body;
   try {
@@ -128,7 +134,7 @@ app.post('/listings/:listingId/update', authenticateToken, async (req, res) => {
   }
 })
 
-app.post('/listings/:listingId/publish', authenticateToken, async (req, res) => {
+app.put('/listings/:listingId/publish', authenticateToken, async (req, res) => {
   const listingId = req.params.listingId;
   try {
     const result = await publishListing(listingId);
@@ -140,7 +146,7 @@ app.post('/listings/:listingId/publish', authenticateToken, async (req, res) => 
   }
 })
 
-app.post('/listings/:listingId/unpublish', authenticateToken, async (req, res) => {
+app.put('/listings/:listingId/unpublish', authenticateToken, async (req, res) => {
   const listingId = req.params.listingId;
   try {
     const result = await unpublishListing(listingId);
@@ -152,7 +158,7 @@ app.post('/listings/:listingId/unpublish', authenticateToken, async (req, res) =
   }
 })
 
-app.post('/listings/:listingId/like', authenticateToken, async (req, res) => {
+app.put('/listings/:listingId/like', authenticateToken, async (req, res) => {
   const listingId = req.params.listingId;
   const email = req.email;
   try {
@@ -165,7 +171,7 @@ app.post('/listings/:listingId/like', authenticateToken, async (req, res) => {
   }
 })
 
-app.post('/listings/:listingId/unlike', authenticateToken, async (req, res) => {
+app.put('/listings/:listingId/unlike', authenticateToken, async (req, res) => {
   const listingId = req.params.listingId;
   const email = req.email;
   try {
@@ -178,7 +184,7 @@ app.post('/listings/:listingId/unlike', authenticateToken, async (req, res) => {
   }
 })
 
-app.post('/listings/:listingId/review', authenticateToken, async (req, res) => {
+app.put('/listings/:listingId/review', authenticateToken, async (req, res) => {
   const listingId = req.params.listingId;
   const body = req.body;
   const email = req.email;

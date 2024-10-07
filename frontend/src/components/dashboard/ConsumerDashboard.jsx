@@ -41,7 +41,7 @@ export default function ConsumerDashboard() {
     const handleLike = async(listingId) => {
       console.log(listingId);
       try {
-        const res = await axios.post(`http://localhost:8888/listings/${listingId}/like`, {}, { 
+        const res = await axios.put(`http://localhost:8888/listings/${listingId}/like`, {}, { 
           headers: { Authorization: `Bearer ${token}` }
         });
         console.log(res.data);
@@ -57,7 +57,7 @@ export default function ConsumerDashboard() {
     const handleUnLike = async(listingId) => {
       console.log(listingId);
       try {
-        const res = await axios.post(`http://localhost:8888/listings/${listingId}/unlike`, {}, { 
+        const res = await axios.put(`http://localhost:8888/listings/${listingId}/unlike`, {}, { 
           headers: { Authorization: `Bearer ${token}` }
         });
         console.log(res.data);

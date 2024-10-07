@@ -63,7 +63,7 @@ const UpdateListingDialog = ({ open, onClose, listing }) => {
     console.log(listingData);  // Call parent function to handle the update
     try {
         const  token = localStorage.getItem("token");
-        const res = await axios.post(`http://localhost:8888/listings/${listing._id}/update`, listingData,{ 
+        const res = await axios.put(`http://localhost:8888/listings/${listing._id}/update`, listingData,{ 
             headers: {Authorization: `Bearer ${token}` } 
         });
 
