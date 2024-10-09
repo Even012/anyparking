@@ -34,7 +34,7 @@ import swaggerUi from 'swagger-ui-express';
 import fs from 'fs';
 import yaml from 'yaml';
 
-const swaggerDocument = yaml.parse(fs.readFileSync('./swagger.yaml', 'utf8'));
+const swaggerDocument = yaml.parse(fs.readFileSync('./src/swagger.yaml', 'utf8'));
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 /***************************************************************
@@ -296,8 +296,8 @@ app.delete('/user/vehicles/:id', authenticateToken, async (req, res) => {
 });
 
 
-
+const PORT = process.env.PORT || 8888;
 // Start the Server
-app.listen(8888, () => {
+app.listen(PORT, () => {
   console.log('Server is running on port 8888');
 });

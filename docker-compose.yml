@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "8888:8888"
+    environment:
+      - NODE_ENV=development
+      - MONGO_URI=mongodb://mongo:27017/userDB  # MongoDB URI
+    depends_on:
+      - mongo
+    networks:
+      - my-network  
+
+  mongo:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./backend/data:/dump  # Mount dump folder to restore
+    command: >
+      bash -c "
+      mongod --fork --logpath /var/log/mongodb.log --bind_ip_all &&
+      mongorestore --drop --db userDB /dump/userDB &&
+      mongod --shutdown &&
+      mongod --logpath /dev/null --quiet --bind_ip_all
+      "
+    
+    networks:
+      - my-network  
+
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/usr/src/app
+    environment:
+      - NODE_ENV=production
+    networks:
+      - my-network  
+
+networks:
+  my-network:
+    driver: bridge
