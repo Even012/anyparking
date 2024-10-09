@@ -26,6 +26,8 @@ The **Car Space Renting Management System** is a web-based platform that facilit
 - Node.js v14.x or higher
 - npm (Node package manager)
 - MongoDB (for NoSQL database)
+- Git for clone repo
+- Docker for containerizing the application.
 
 ### **Steps to Install**
 
@@ -35,7 +37,7 @@ The **Car Space Renting Management System** is a web-based platform that facilit
    git clone https://github.com/Even012/anyparking.git
 
 2. Run the app
-
+   
    Run the app backend
    ```bash
    cd anyparking/backend
@@ -49,8 +51,15 @@ The **Car Space Renting Management System** is a web-based platform that facilit
    npm install
    npm start
    ```
+
+3. OR run docker container
+
+   ```bash
+   cd anyparking/
+   docker-compose up --build
    
-4. View the app
+   
+5. View the app
 
    View the app backend
    ```bash
