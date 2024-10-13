@@ -35,8 +35,17 @@ The **Car Space Renting Management System** is a web-based platform that facilit
 
    ```bash
    git clone https://github.com/Even012/anyparking.git
+   ```
+   
+2. Run docker container
 
-2. Run the app
+   ```bash
+   cd anyparking/
+   docker-compose up --build
+   ```
+   Note: make sure docker daemon is running.
+
+3. Run the app locally
    
    Run the app backend
    ```bash
@@ -52,14 +61,7 @@ The **Car Space Renting Management System** is a web-based platform that facilit
    npm start
    ```
 
-3. OR run docker container
-
-   ```bash
-   cd anyparking/
-   docker-compose up --build
-   
-   
-5. View the app
+4. View the app
 
    View the app backend
    ```bash
